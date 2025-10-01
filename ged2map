@@ -27,12 +27,10 @@ my $google_key = $ENV{GMAP_WEBSITE_KEY};
 my $ged = Gedcom->new(gedcom_file => $gedcom_file, read_only => 1);
 
 # Initialize geocoder
-# my $geocoder = Geo::Coder::OSM->new();
 my $cache_dir;
 if(my $e = $ENV{'CACHE_DIR'}) {
 	$cache_dir = File::Spec->catfile($e, basename($0));
 } else {
-	# $cache_dir = File::Spec->catfile(File::Spec->tmpdir(), 'cache', basename($0));
 	$cache_dir = File::Spec->catfile(File::HomeDir->my_home(), '.cache', basename($0));
 }
 my $geocoder = Geo::Coder::List->new(
@@ -41,7 +39,6 @@ my $geocoder = Geo::Coder::List->new(
 		root_dir => $cache_dir,
 		l1_cache => { driver => 'RawMemory', global => 1, max_size => 1024*1024 }
 	),
-	# debug => 1
 )->push(Geo::Coder::Free::Local->new())->push(Geo::Coder::Free->new())->push(Geo::Coder::OSM->new());
 
 # Storage for events
@@ -138,18 +135,79 @@ foreach my $event (@events) {
 print 'Successfully geocoded ', scalar(@geocoded_events), " events.\n";
 print "Generating map...\n";
 
+# Group events by location
+my %location_groups;
+foreach my $event (@geocoded_events) {
+	my $key = sprintf("%.6f,%.6f", $event->{lat}, $event->{lon});
+	push @{$location_groups{$key}}, $event;
+}
+
 # Generate map based on available API key
 if ($google_key) {
-	generate_google_map(\@geocoded_events, $output_file, $google_key);
+	generate_google_map(\%location_groups, $output_file, $google_key);
 } else {
-	generate_osm_map(\@geocoded_events, $output_file);
+	generate_osm_map(\%location_groups, $output_file);
 }
 
 print "Map saved to $output_file\n";
 
+# Generate HTML for grouped events
+sub generate_popup_html {
+	my ($events) = @_;
+	
+	my $place = $events->[0]{place};
+	my $html = "<b>$place</b><br><br>";
+	
+	# Group by type
+	my %by_type;
+	foreach my $event (@$events) {
+		push @{$by_type{$event->{type}}}, $event;
+	}
+	
+	# Add births
+	if ($by_type{birth}) {
+		$html .= "<b>Births:</b><br>";
+		foreach my $event (@{$by_type{birth}}) {
+			$html .= sprintf(
+				'<span style="color: green; font-size: 20px;">●</span> %s (%s)<br>',
+				$event->{name},
+				$event->{date}
+			);
+		}
+		$html .= "<br>";
+	}
+	
+	# Add marriages
+	if ($by_type{marriage}) {
+		$html .= "<b>Marriages:</b><br>";
+		foreach my $event (@{$by_type{marriage}}) {
+			$html .= sprintf(
+				'<span style="color: blue; font-size: 20px;">●</span> %s (%s)<br>',
+				$event->{name},
+				$event->{date}
+			);
+		}
+		$html .= "<br>";
+	}
+	
+	# Add deaths
+	if ($by_type{death}) {
+		$html .= "<b>Deaths:</b><br>";
+		foreach my $event (@{$by_type{death}}) {
+			$html .= sprintf(
+				'<span style="color: red; font-size: 20px;">●</span> %s (%s)<br>',
+				$event->{name},
+				$event->{date}
+			);
+		}
+	}
+	
+	return $html;
+}
+
 # Generate Google Maps
 sub generate_google_map {
-	my ($events, $file, $key) = @_;
+	my ($location_groups, $file, $key) = @_;
 
 	my $map = HTML::GoogleMaps::V3->new(
 		key => $key,
@@ -157,30 +215,25 @@ sub generate_google_map {
 		width => '100%',
 	);
 
-	# Add markers for each event
-	foreach my $event (@$events) {
-		my $icon = $event->{type} eq 'birth' ? "\N{U+1F7E2}" :
-					$event->{type} eq 'death' ? "\N{U+1F534}" : "\N{U+1F535}";
-
-		my $html = sprintf(
-			"<b>%s</b><br>%s<br>%s<br>%s",
-			ucfirst($event->{type}),
-			$event->{name},
-			$event->{date},
-			$event->{place}
-		);
+	# Add markers for each location
+	my $first = 1;
+	foreach my $loc_key (keys %$location_groups) {
+		my $events = $location_groups->{$loc_key};
+		my ($lat, $lon) = split /,/, $loc_key;
+		
+		my $html = generate_popup_html($events);
 
 		$map->add_marker(
-			# icon => $icon,
-			point => [$event->{lat}, $event->{lon}],
+			point => [$lat, $lon],
 			html => $html,
 		);
-	}
-
-	# Center map on first event
-	if (@$events) {
-		$map->center([$events->[0]{lat}, $events->[0]{lon}]);
-		$map->zoom(4);
+		
+		# Center on first location
+		if ($first) {
+			$map->center([$lat, $lon]);
+			$map->zoom(4);
+			$first = 0;
+		}
 	}
 
 	# Generate and save HTML
@@ -191,16 +244,18 @@ sub generate_google_map {
 
 # Generate OpenStreetMap using HTML::OSM
 sub generate_osm_map {
-	my ($events, $file) = @_;
+	my ($location_groups, $file) = @_;
 
 	# Calculate center point
-	my ($lat_sum, $lon_sum) = (0, 0);
-	foreach (@$events) {
-		$lat_sum += $_->{lat};
-		$lon_sum += $_->{lon};
+	my ($lat_sum, $lon_sum, $count) = (0, 0, 0);
+	foreach my $loc_key (keys %$location_groups) {
+		my ($lat, $lon) = split /,/, $loc_key;
+		$lat_sum += $lat;
+		$lon_sum += $lon;
+		$count++;
 	}
-	my $center_lat = @$events ? $lat_sum / @$events : 0;
-	my $center_lon = @$events ? $lon_sum / @$events : 0;
+	my $center_lat = $count ? $lat_sum / $count : 0;
+	my $center_lon = $count ? $lon_sum / $count : 0;
 
 	# Create HTML::OSM object
 	my $osm = HTML::OSM->new(
@@ -209,23 +264,16 @@ sub generate_osm_map {
 		zoom => 4,
 	);
 
-	# Add markers for each event
-	foreach my $event (@$events) {
-		my $icon = $event->{type} eq 'birth' ? "\N{U+1F7E2}" :
-					$event->{type} eq 'death' ? "\N{U+1F534}" : "\N{U+1F535}";
-
-		my $html = sprintf(
-			'<b>%s</b><br>%s<br>%s<br>%s',
-			ucfirst($event->{type}),
-			$event->{name},
-			$event->{date},
-			$event->{place}
-		);
+	# Add markers for each location
+	foreach my $loc_key (keys %$location_groups) {
+		my $events = $location_groups->{$loc_key};
+		my ($lat, $lon) = split /,/, $loc_key;
+		
+		my $html = generate_popup_html($events);
 
 		$osm->add_marker(
-			point => [$event->{lat}, $event->{lon}],
+			point => [$lat, $lon],
 			html => $html,
-			# icon => $icon,
 		);
 	}
 
