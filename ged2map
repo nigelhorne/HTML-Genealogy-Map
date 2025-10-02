@@ -20,7 +20,7 @@ use HTML::GoogleMaps::V3;
 use HTML::OSM;
 
 # Configuration
-my $gedcom_file = $ARGV[0] or die "Usage: $0 <gedcom_file>\n";
+my $gedcom_file = $ARGV[0] or die "Usage: $0 <gedcom_file>";
 my $output_file = $ARGV[1] || 'events_map.html';
 my $google_key = $ENV{GMAP_WEBSITE_KEY};
 
