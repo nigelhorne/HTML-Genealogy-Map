@@ -236,7 +236,7 @@ sub onload_render
 	# Group events by location
 	my %location_groups;
 	foreach my $event (@geocoded_events) {
-		my $key = sprintf("%.6f,%.6f", $event->{lat}, $event->{lon});
+		my $key = sprintf('%.6f,%.6f', $event->{lat}, $event->{lon});
 		push @{$location_groups{$key}}, $event;
 	}
 
@@ -284,7 +284,7 @@ sub generate_popup_html {
 
 	# Add births
 	if ($by_type{birth}) {
-		$html .= "<b>Births:</b><br>";
+		$html .= '<b>Births:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{birth}}) {
 			$html .= sprintf(
 				'<span style="color: green; font-size: 20px;">●</span> %s (%s)<br>',
@@ -292,12 +292,12 @@ sub generate_popup_html {
 				$event->{date}
 			);
 		}
-		$html .= "<br>";
+		$html .= '<br>';
 	}
 
 	# Add marriages
 	if ($by_type{marriage}) {
-		$html .= "<b>Marriages:</b><br>";
+		$html .= '<b>Marriages:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{marriage}}) {
 			$html .= sprintf(
 				'<span style="color: blue; font-size: 20px;">●</span> %s (%s)<br>',
@@ -305,12 +305,12 @@ sub generate_popup_html {
 				$event->{date}
 			);
 		}
-		$html .= "<br>";
+		$html .= '<br>';
 	}
 
 	# Add deaths
 	if ($by_type{death}) {
-		$html .= "<b>Deaths:</b><br>";
+		$html .= '<b>Deaths:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{death}}) {
 			$html .= sprintf(
 				'<span style="color: red; font-size: 20px;">●</span> %s (%s)<br>',
@@ -400,6 +400,14 @@ sub generate_osm_map {
 Nigel Horne, C<< <njh at nigelhorne.com> >>
 
 =head1 BUGS
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * Test coverage report: L<https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/>
+
+=back
 
 =head1 REPOSITORY
 

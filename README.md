@@ -70,11 +70,13 @@ It returns an arrayref of two elements, the items for the `head` and `body`.
 Argument error: croak
 No matches found: undef
 
+Returns an array of two strings:
+
     {
-      'type' => 'arrayref',
-      'schema' => { 'type' => 'string', min => 10 },
+      'type' => 'array',
       'min' => 2,
       'max' => 2,
+      'schema' => { 'type' => 'string', min => 10 },
     }
 
 # AUTHOR
@@ -82,6 +84,10 @@ No matches found: undef
 Nigel Horne, `<njh at nigelhorne.com>`
 
 # BUGS
+
+# SEE ALSO
+
+- Test coverage report: [https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/](https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/)
 
 # REPOSITORY
 
