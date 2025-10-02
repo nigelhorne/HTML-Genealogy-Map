@@ -7,6 +7,7 @@ use utf8;
 
 use open qw(:std :encoding(UTF-8));
 
+use autodie;
 use CHI;
 use File::Basename;
 use File::HomeDir;
@@ -154,16 +155,16 @@ print "Map saved to $output_file\n";
 # Generate HTML for grouped events
 sub generate_popup_html {
 	my ($events) = @_;
-	
+
 	my $place = $events->[0]{place};
 	my $html = "<b>$place</b><br><br>";
-	
+
 	# Group by type
 	my %by_type;
 	foreach my $event (@$events) {
 		push @{$by_type{$event->{type}}}, $event;
 	}
-	
+
 	# Add births
 	if ($by_type{birth}) {
 		$html .= "<b>Births:</b><br>";
@@ -176,7 +177,7 @@ sub generate_popup_html {
 		}
 		$html .= "<br>";
 	}
-	
+
 	# Add marriages
 	if ($by_type{marriage}) {
 		$html .= "<b>Marriages:</b><br>";
@@ -189,7 +190,7 @@ sub generate_popup_html {
 		}
 		$html .= "<br>";
 	}
-	
+
 	# Add deaths
 	if ($by_type{death}) {
 		$html .= "<b>Deaths:</b><br>";
@@ -201,7 +202,7 @@ sub generate_popup_html {
 			);
 		}
 	}
-	
+
 	return $html;
 }
 
@@ -220,14 +221,14 @@ sub generate_google_map {
 	foreach my $loc_key (keys %$location_groups) {
 		my $events = $location_groups->{$loc_key};
 		my ($lat, $lon) = split /,/, $loc_key;
-		
+
 		my $html = generate_popup_html($events);
 
 		$map->add_marker(
 			point => [$lat, $lon],
 			html => $html,
 		);
-		
+
 		# Center on first location
 		if ($first) {
 			$map->center([$lat, $lon]);
@@ -246,29 +247,14 @@ sub generate_google_map {
 sub generate_osm_map {
 	my ($location_groups, $file) = @_;
 
-	# Calculate center point
-	my ($lat_sum, $lon_sum, $count) = (0, 0, 0);
-	foreach my $loc_key (keys %$location_groups) {
-		my ($lat, $lon) = split /,/, $loc_key;
-		$lat_sum += $lat;
-		$lon_sum += $lon;
-		$count++;
-	}
-	my $center_lat = $count ? $lat_sum / $count : 0;
-	my $center_lon = $count ? $lon_sum / $count : 0;
-
 	# Create HTML::OSM object
-	my $osm = HTML::OSM->new(
-		lat => $center_lat,
-		lon => $center_lon,
-		zoom => 4,
-	);
+	my $osm = HTML::OSM->new(zoom => 10);
 
 	# Add markers for each location
 	foreach my $loc_key (keys %$location_groups) {
 		my $events = $location_groups->{$loc_key};
 		my ($lat, $lon) = split /,/, $loc_key;
-		
+
 		my $html = generate_popup_html($events);
 
 		$osm->add_marker(
@@ -276,6 +262,19 @@ sub generate_osm_map {
 			html => $html,
 		);
 	}
+
+	# Find location with most events
+	my ($center_lat, $center_lon) = (0, 0);
+	my $max_events = 0;
+	foreach my $loc_key (keys %$location_groups) {
+		my $event_count = scalar(@{$location_groups->{$loc_key}});
+		if ($event_count > $max_events) {
+			$max_events = $event_count;
+			($center_lat, $center_lon) = split /,/, $loc_key;
+		}
+	}
+
+	$osm->center([$center_lat, $center_lon]);
 
 	# Generate and save HTML
 	open my $fh, '>', $file or die "Cannot open $file: $!";
@@ -297,7 +296,16 @@ sub render {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
 		body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-		#map { height: 100vh; width: 100%; }
+		#map {
+			margin: 0 auto; /* This centers it horizontally */
+			height: 90vh;
+			width: 80% !important;
+		}
+		#map > * {
+			margin: 0 auto; /* This centers child elements */
+			width: 100% !important; /* Use 100% to fill the parent, not 80% */
+			height: 100% !important;
+		}
 	</style>
 	$head
 </head>
