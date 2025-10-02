@@ -2,12 +2,9 @@
 
 use strict;
 use warnings;
-use utf8;
 
 use open qw(:std :encoding(UTF-8));
 use Test::Most tests => 20;
-use Test::Deep;
-use Test::Warn;
 
 BEGIN {
 	use_ok('HTML::Genealogy::Map');
@@ -112,21 +109,21 @@ BEGIN {
 	}
 }
 
-# Test 1: Module loads
+# Module loads
 ok(1, 'Module loaded');
 
-# Test 2: onload_render requires gedcom parameter
+# onload_render requires gedcom parameter
 throws_ok {
 	HTML::Genealogy::Map->onload_render();
 } qr/gedcom/, 'onload_render requires gedcom parameter';
 
-# Test 3: onload_render requires geocoder parameter
+# onload_render requires geocoder parameter
 throws_ok {
 	my $ged = Mock::Gedcom->new();
 	HTML::Genealogy::Map->onload_render(gedcom => $ged);
 } qr/geocoder/, 'onload_render requires geocoder parameter';
 
-# Test 4: Basic functionality with empty GEDCOM
+# Basic functionality with empty GEDCOM
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
@@ -140,7 +137,7 @@ throws_ok {
 	ok(defined $body, 'Returns body HTML');
 }
 
-# Test 5-7: GEDCOM with one birth event
+# GEDCOM with one birth event
 {
 	my $ged = Mock::Gedcom->new();
 	my $birth = Mock::Event->new(
@@ -165,7 +162,7 @@ throws_ok {
 	like($body, qr/London, England/, 'Location appears in map');
 }
 
-# Test 8-9: GEDCOM with death event
+# GEDCOM with death event
 {
 	my $ged = Mock::Gedcom->new();
 	my $death = Mock::Event->new(
@@ -189,7 +186,7 @@ throws_ok {
 	like($body, qr/Jane Doe/, 'Name without slashes appears in map');
 }
 
-# Test 10: GEDCOM with marriage event
+# GEDCOM with marriage event
 {
 	my $ged = Mock::Gedcom->new();
 	my $marriage = Mock::Event->new(
@@ -215,7 +212,7 @@ throws_ok {
 	like($body, qr/Paris, France/, 'Marriage location appears in map');
 }
 
-# Test 11: Multiple events at same location
+# Multiple events at same location
 {
 	my $ged = Mock::Gedcom->new();
 	my $birth1 = Mock::Event->new(
@@ -247,7 +244,7 @@ throws_ok {
 	like($body, qr/Mary Smith/, 'Second person in grouped location');
 }
 
-# Test 12: Debug mode
+# Debug mode
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
@@ -267,7 +264,7 @@ throws_ok {
 	like($output, qr/Parsing GEDCOM/, 'Debug output generated');
 }
 
-# Test 13: Invalid Google key format
+# Invalid Google key format
 throws_ok {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
@@ -279,7 +276,7 @@ throws_ok {
 	);
 } qr/google_key/, 'Rejects invalid Google API key';
 
-# Test 14: Valid Google key format
+# Valid Google key format
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
@@ -293,7 +290,7 @@ throws_ok {
 	ok(defined $head, 'Accepts valid Google API key format');
 }
 
-# Test 15: Events without location data are skipped
+# Events without location data are skipped
 {
 	my $ged = Mock::Gedcom->new();
 	my $birth_no_place = Mock::Event->new(
@@ -316,7 +313,7 @@ throws_ok {
 	ok(defined $body, 'Handles events without location gracefully');
 }
 
-# Test 16: Failed geocoding is handled
+# Failed geocoding is handled
 {
 	my $ged = Mock::Gedcom->new();
 	my $birth = Mock::Event->new(
