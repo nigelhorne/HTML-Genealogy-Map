@@ -105,11 +105,13 @@ Enable print statements of what's going on
 Argument error: croak
 No matches found: undef
 
+Returns an array of two strings:
+
   {
-    'type' => 'arrayref',
-    'schema' => { 'type' => 'string', min => 10 },
+    'type' => 'array',
     'min' => 2,
     'max' => 2,
+    'schema' => { 'type' => 'string', min => 10 },
   }
 
 =cut
@@ -120,7 +122,7 @@ sub onload_render
 
 	# Configuration
 	my $params = Params::Validate::Strict::validate_strict({
-		args => Params::Get::get_params('gedcom', \@_),
+		args => Params::Get::get_params('gedcom', @_),
 		schema => {
 			'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
 			'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
@@ -226,6 +228,9 @@ sub onload_render
 	}
 
 	print 'Successfully geocoded ', scalar(@geocoded_events), " events.\n" if($debug);
+
+	return('', '') if(scalar(@geocoded_events) == 0);	# Empty
+
 	print "Generating map...\n" if($debug);
 
 	# Group events by location
