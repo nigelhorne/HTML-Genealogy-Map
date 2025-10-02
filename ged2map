@@ -157,7 +157,17 @@ sub generate_popup_html {
 	my ($events) = @_;
 
 	my $place = $events->[0]{place};
-	my $html = "<b>$place</b><br><br>";
+	my $event_count = scalar(@$events);
+
+	# Add scrollable container if more than 5 events
+	my $container_start = '';
+	my $container_end = '';
+	if ($event_count > 5) {
+		$container_start = '<div style="max-height: 300px; overflow-y: auto;">';
+		$container_end = '</div>';
+	}
+
+	my $html = "<b>$place</b><br><br>$container_start";
 
 	# Group by type
 	my %by_type;
@@ -202,6 +212,8 @@ sub generate_popup_html {
 			);
 		}
 	}
+
+	$html .= $container_end;
 
 	return $html;
 }
@@ -248,7 +260,7 @@ sub generate_osm_map {
 	my ($location_groups, $file) = @_;
 
 	# Create HTML::OSM object
-	my $osm = HTML::OSM->new(zoom => 10);
+	my $osm = HTML::OSM->new(zoom => 11);
 
 	# Add markers for each location
 	foreach my $loc_key (keys %$location_groups) {
