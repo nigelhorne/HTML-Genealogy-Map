@@ -11,7 +11,14 @@ use open qw(:std :encoding(UTF-8));
 
 use autodie;
 
+use CHI;
+use File::Basename;
+use File::HomeDir;
+use File::Spec;
 use Gedcom;
+use Geo::Coder::Free;
+use Geo::Coder::List;
+use Geo::Coder::OSM;
 use HTML::Genealogy::Map;
 
 # Configuration
@@ -21,7 +28,31 @@ my $output_file = $ARGV[1] || 'events_map.html';
 # Initialize GEDCOM parser
 my $gedcom = Gedcom->new(gedcom_file => $gedcom_file, read_only => 1);
 
-my ($head, $body) = HTML::Genealogy::Map->onload_render({ gedcom => $gedcom, debug => 1, google_key => $ENV{'GMAP_WEBSITE_KEY'} });
+# Initialize geocoder
+my $cache_dir;
+if(my $e = $ENV{'CACHEDIR'} || $ENV{'CACHE_DIR'}) {
+	$cache_dir = File::Spec->catfile($e, basename($0));
+} else {
+	$cache_dir = File::Spec->catfile(File::HomeDir->my_home(), '.cache', basename($0));
+}
+my $geocoder = Geo::Coder::List->new(
+	cache => CHI->new(
+		driver => 'File',
+		root_dir => $cache_dir,
+		l1_cache => { driver => 'RawMemory', datastore => {}, max_size => 1024*1024 }
+	),
+)->push(Geo::Coder::Free::Local->new())->push(Geo::Coder::Free->new())->push(Geo::Coder::OSM->new());
+
+my $opts = {
+	gedcom => $gedcom,
+	debug => 1,
+	geocoder => $geocoder
+};
+
+if($ENV{'GMAP_WEBSITE_KEY'}) {
+	$opts->{'google_key'} = $ENV{'GMAP_WEBSITE_KEY'};
+}
+my ($head, $body) = HTML::Genealogy::Map->onload_render($opts);
 
 if(open(my $fout, '>', $output_file)) {
 	print "Saving map to $output_file\n";

@@ -8,16 +8,11 @@ use utf8;
 use open qw(:std :encoding(UTF-8));
 
 use autodie;
-use CHI;
 use Date::Cmp;
-use File::HomeDir;
-use File::Spec;
-use Geo::Coder::Free;
-use Geo::Coder::List;
-use Geo::Coder::OSM;
 use HTML::GoogleMaps::V3;
 use HTML::OSM;
 use Params::Get;
+use Params::Validate::Strict;
 
 =head1 NAME
 
@@ -49,14 +44,18 @@ All geocoding results are cached to improve performance and reduce API calls.
 =head2 onload_render
 
 Render the map.
-It takes one mandatory and one optional parameter.
+It takes two mandatory and one optional parameter.
 It returns an arrayref of two elements, the items for the C<head> and C<body>.
 
 =over 4
 
 =item B<gedcom>
 
-C<GEDCOM> object to process.
+L<GEDCOM> object to process.
+
+=item B<geocoder>
+
+Geocoder to use.
 
 =item B<google_key>
 
@@ -65,17 +64,6 @@ Key to Google's map API.
 =item B<debug>
 
 Enable print statements of what's going on
-
-=back
-
-=head1 ENVIRONMENT VARIABLES
-
-=over 4
-
-=item B<CACHE_DIR>
-
-Custom directory for geocoding cache. If not set, defaults to 
-~/.cache/__PACKAGE__
 
 =back
 
@@ -108,26 +96,20 @@ sub onload_render
 	my $class = shift;
 
 	# Configuration
-	my $params = Params::Get::get_params('gedcom', @_);
+	my $params = Params::Validate::Strict::validate_strict({
+		args => Params::Get::get_params('gedcom', \@_),
+		schema => {
+			'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
+			'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
+			'debug' => { 'type' => 'boolean', optional => 1 },
+			'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+		}
+	});
 
-	my $ged = $params->{'gedcom'} or die 'Usage: gedcom_file';
+	my $ged = $params->{'gedcom'};
 	my $debug = $params->{'debug'};
 	my $google_key = $params->{'google_key'};
-
-	# Initialize geocoder
-	my $cache_dir;
-	if(my $e = $ENV{'CACHE_DIR'}) {
-		$cache_dir = File::Spec->catfile($e, $class);
-	} else {
-		$cache_dir = File::Spec->catfile(File::HomeDir->my_home(), '.cache', $class);
-	}
-	my $geocoder = Geo::Coder::List->new(
-		cache => CHI->new(
-			driver => 'File',
-			root_dir => $cache_dir,
-			l1_cache => { driver => 'RawMemory', global => 1, max_size => 1024*1024 }
-		),
-	)->push(Geo::Coder::Free::Local->new())->push(Geo::Coder::Free->new())->push(Geo::Coder::OSM->new());
+	my $geocoder = $params->{'geocoder'};
 
 	# Storage for events
 	my @events;
