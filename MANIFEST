@@ -1,0 +1,8 @@
+bin/ged2map
+ged2map
+lib/HTML/Genealogy/Map.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+README.md
