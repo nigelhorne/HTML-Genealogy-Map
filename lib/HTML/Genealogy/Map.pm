@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+package HTML::Genealogy::Map;
 
 use strict;
 use warnings;
@@ -12,7 +12,6 @@ use CHI;
 use Date::Cmp;
 use File::HomeDir;
 use File::Spec;
-use Gedcom;
 use Geo::Coder::Free;
 use Geo::Coder::List;
 use Geo::Coder::OSM;
@@ -55,9 +54,13 @@ It returns an arrayref of two elements, the items for the C<head> and C<body>.
 
 =over 4
 
-=item B<gedcom_file>
+=item B<gedcom>
 
-Path to the GEDCOM file to process.
+C<GEDCOM> object to process.
+
+=item B<google_key>
+
+Key to Google's map API.
 
 =item B<debug>
 
@@ -68,11 +71,6 @@ Enable print statements of what's going on
 =head1 ENVIRONMENT VARIABLES
 
 =over 4
-
-=item B<GMAP_WEBSITE_KEY>
-
-Google Maps API key. If set, the program will use Google Maps for rendering.
-Otherwise, it will use OpenStreetMap via HTML::OSM.
 
 =item B<CACHE_DIR>
 
@@ -107,22 +105,21 @@ Custom directory for geocoding cache. If not set, defaults to
 
 sub onload_render
 {
+	my $class = shift;
+
 	# Configuration
-	my $params = Params::Get::get_params('gedcom_file', @_);
+	my $params = Params::Get::get_params('gedcom', @_);
 
-	my $gedcom_file = $params->{'gedcom_file'} or die "Usage: $0 <gedcom_file>";
+	my $ged = $params->{'gedcom'} or die 'Usage: gedcom_file';
 	my $debug = $params->{'debug'};
-	my $google_key = $ENV{GMAP_WEBSITE_KEY};
-
-	# Initialize GEDCOM parser
-	my $ged = Gedcom->new(gedcom_file => $gedcom_file, read_only => 1);
+	my $google_key = $params->{'google_key'};
 
 	# Initialize geocoder
 	my $cache_dir;
 	if(my $e = $ENV{'CACHE_DIR'}) {
-		$cache_dir = File::Spec->catfile($e, __PACKAGE__);
+		$cache_dir = File::Spec->catfile($e, $class);
 	} else {
-		$cache_dir = File::Spec->catfile(File::HomeDir->my_home(), '.cache', __PACKAGE__);
+		$cache_dir = File::Spec->catfile(File::HomeDir->my_home(), '.cache', $class);
 	}
 	my $geocoder = Geo::Coder::List->new(
 		cache => CHI->new(
