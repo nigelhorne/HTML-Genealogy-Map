@@ -25,7 +25,7 @@ All geocoding results are cached to improve performance and reduce API calls.
 
 Render the map.
 It takes two mandatory and one optional parameter.
-It returns an arrayref of two elements, the items for the `head` and `body`.
+It returns an array of two elements, the items for the `head` and `body`.
 
 - **gedcom**
 
