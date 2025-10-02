@@ -16,17 +16,17 @@ BEGIN {
 # Mock Gedcom object
 {
 	package Mock::Gedcom;
-	
+
 	sub new {
 		my $class = shift;
 		return bless {}, $class;
 	}
-	
+
 	sub individuals {
 		my $self = shift;
 		return @{$self->{individuals} || []};
 	}
-	
+
 	sub families {
 		my $self = shift;
 		return @{$self->{families} || []};
@@ -36,12 +36,12 @@ BEGIN {
 # Mock Individual
 {
 	package Mock::Individual;
-	
+
 	sub new {
 		my ($class, %args) = @_;
 		return bless \%args, $class;
 	}
-	
+
 	sub name { return $_[0]->{name}; }
 	sub birth { return $_[0]->{birth}; }
 	sub death { return $_[0]->{death}; }
@@ -50,12 +50,12 @@ BEGIN {
 # Mock Event
 {
 	package Mock::Event;
-	
+
 	sub new {
 		my ($class, %args) = @_;
 		return bless \%args, $class;
 	}
-	
+
 	sub place { return $_[0]->{place}; }
 	sub date { return $_[0]->{date}; }
 }
@@ -63,12 +63,12 @@ BEGIN {
 # Mock Family
 {
 	package Mock::Family;
-	
+
 	sub new {
 		my ($class, %args) = @_;
 		return bless \%args, $class;
 	}
-	
+
 	sub husband { return $_[0]->{husband}; }
 	sub wife { return $_[0]->{wife}; }
 	sub marriage { return $_[0]->{marriage}; }
@@ -77,37 +77,37 @@ BEGIN {
 # Mock Geocoder
 {
 	package Mock::Geocoder;
-	
+
 	sub new {
 		my $class = shift;
 		return bless {}, $class;
 	}
-	
+
 	sub geocode {
 		my ($self, %args) = @_;
 		my $location = $args{location};
-		
+
 		# Return mock coordinates based on location
 		if ($location eq 'London, England') {
-			return { 
-				lat => 51.5074, 
+			return {
+				lat => 51.5074,
 				lon => -0.1278,
 				geocoder => 'Mock::Geocoder'
 			};
 		} elsif ($location eq 'New York, USA') {
-			return { 
-				lat => 40.7128, 
+			return {
+				lat => 40.7128,
 				lon => -74.0060,
 				geocoder => 'Mock::Geocoder'
 			};
 		} elsif ($location eq 'Paris, France') {
-			return { 
-				lat => 48.8566, 
+			return {
+				lat => 48.8566,
 				lon => 2.3522,
 				geocoder => 'Geo::Coder::Free::Local'
 			};
 		}
-		
+
 		return undef;  # Failed geocoding
 	}
 }
@@ -130,12 +130,12 @@ throws_ok {
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	ok(defined $head, 'Returns head HTML');
 	ok(defined $body, 'Returns body HTML');
 }
@@ -152,14 +152,14 @@ throws_ok {
 		birth => $birth
 	);
 	$ged->{individuals} = [$indi];
-	
+
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	ok(defined $head, 'Head HTML generated for single birth');
 	ok(defined $body, 'Body HTML generated for single birth');
 	like($body, qr/London, England/, 'Location appears in map');
@@ -177,14 +177,14 @@ throws_ok {
 		death => $death
 	);
 	$ged->{individuals} = [$indi];
-	
+
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	like($body, qr/New York, USA/, 'Death location appears in map');
 	like($body, qr/Jane Doe/, 'Name without slashes appears in map');
 }
@@ -204,14 +204,14 @@ throws_ok {
 		marriage => $marriage
 	);
 	$ged->{families} = [$fam];
-	
+
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	like($body, qr/Paris, France/, 'Marriage location appears in map');
 }
 
@@ -235,14 +235,14 @@ throws_ok {
 		birth => $birth2
 	);
 	$ged->{individuals} = [$indi1, $indi2];
-	
+
 	my $geocoder = new_ok('Mock::Geocoder');
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	like($body, qr/John Smith/, 'First person in grouped location');
 	like($body, qr/Mary Smith/, 'Second person in grouped location');
 }
@@ -251,19 +251,19 @@ throws_ok {
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my $output = '';
 	{
 		local *STDOUT;
 		open STDOUT, '>', \$output;
-		
+
 		HTML::Genealogy::Map->onload_render(
 			gedcom => $ged,
 			geocoder => $geocoder,
 			debug => 1
 		);
 	}
-	
+
 	like($output, qr/Parsing GEDCOM/, 'Debug output generated');
 }
 
@@ -271,7 +271,7 @@ throws_ok {
 throws_ok {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder,
@@ -283,13 +283,13 @@ throws_ok {
 {
 	my $ged = Mock::Gedcom->new();
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder,
 		google_key => 'AIzaSyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456'
 	);
-	
+
 	ok(defined $head, 'Accepts valid Google API key format');
 }
 
@@ -305,14 +305,14 @@ throws_ok {
 		birth => $birth_no_place
 	);
 	$ged->{individuals} = [$indi];
-	
+
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	ok(defined $body, 'Handles events without location gracefully');
 }
 
@@ -328,14 +328,14 @@ throws_ok {
 		birth => $birth
 	);
 	$ged->{individuals} = [$indi];
-	
+
 	my $geocoder = Mock::Geocoder->new();
-	
+
 	my ($head, $body) = HTML::Genealogy::Map->onload_render(
 		gedcom => $ged,
 		geocoder => $geocoder
 	);
-	
+
 	ok(defined $body, 'Handles failed geocoding gracefully');
 }
 
