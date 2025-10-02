@@ -89,6 +89,29 @@ Enable print statements of what's going on
 
 =back
 
+=head3	API SPECIFICATION
+
+=head4	INPUT
+
+  {
+    'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
+    'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
+    'debug' => { 'type' => 'boolean', optional => 1 },
+    'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+  }
+
+=head4	OUTPUT
+
+Argument error: croak
+No matches found: undef
+
+  {
+    'type' => 'arrayref',
+    'schema' => { 'type' => 'string', min => 10 },
+    'min' => 2,
+    'max' => 2,
+  }
+
 =cut
 
 sub onload_render

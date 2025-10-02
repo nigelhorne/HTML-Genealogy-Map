@@ -24,28 +24,24 @@ All geocoding results are cached to improve performance and reduce API calls.
 ## onload\_render
 
 Render the map.
-It takes one mandatory and one optional parameter.
+It takes two mandatory and one optional parameter.
 It returns an arrayref of two elements, the items for the `head` and `body`.
 
-- **gedcom\_file**
+- **gedcom**
 
-    Path to the GEDCOM file to process.
+    [GEDCOM](https://metacpan.org/pod/GEDCOM) object to process.
+
+- **geocoder**
+
+    Geocoder to use.
+
+- **google\_key**
+
+    Key to Google's map API.
 
 - **debug**
 
     Enable print statements of what's going on
-
-# ENVIRONMENT VARIABLES
-
-- **GMAP\_WEBSITE\_KEY**
-
-    Google Maps API key. If set, the program will use Google Maps for rendering.
-    Otherwise, it will use OpenStreetMap via HTML::OSM.
-
-- **CACHE\_DIR**
-
-    Custom directory for geocoding cache. If not set, defaults to 
-    ~/.cache/\_\_PACKAGE\_\_
 
 # FEATURES
 
@@ -57,6 +53,29 @@ It returns an arrayref of two elements, the items for the `head` and `body`.
 - Scrollable popups for locations with more than 5 events
 - Persistent caching of geocoding results
 - For OpenStreetMap: centers on location with most events
+
+### API SPECIFICATION
+
+#### INPUT
+
+    {
+      'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
+      'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
+      'debug' => { 'type' => 'boolean', optional => 1 },
+      'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+    }
+
+#### OUTPUT
+
+Argument error: croak
+No matches found: undef
+
+    {
+      'type' => 'arrayref',
+      'schema' => { 'type' => 'string', min => 10 },
+      'min' => 2,
+      'max' => 2,
+    }
 
 # AUTHOR
 
