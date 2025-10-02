@@ -9,6 +9,7 @@ use open qw(:std :encoding(UTF-8));
 
 use autodie;
 use CHI;
+use Date::Cmp;
 use File::Basename;
 use File::HomeDir;
 use File::Spec;
@@ -175,10 +176,16 @@ sub generate_popup_html {
 		push @{$by_type{$event->{type}}}, $event;
 	}
 
+	# Sort function for dates
+	my $sort_by_date = sub {
+		return 0 if(($a->{'date'} =~ /^Unknown/i) || ($b->{'date'} =~ /^Unknown/));
+		return Date::Cmp::datecmp($a->{'date'}, $b->{'date'});
+	};
+
 	# Add births
 	if ($by_type{birth}) {
 		$html .= "<b>Births:</b><br>";
-		foreach my $event (@{$by_type{birth}}) {
+		foreach my $event (sort $sort_by_date @{$by_type{birth}}) {
 			$html .= sprintf(
 				'<span style="color: green; font-size: 20px;">●</span> %s (%s)<br>',
 				$event->{name},
@@ -191,7 +198,7 @@ sub generate_popup_html {
 	# Add marriages
 	if ($by_type{marriage}) {
 		$html .= "<b>Marriages:</b><br>";
-		foreach my $event (@{$by_type{marriage}}) {
+		foreach my $event (sort $sort_by_date @{$by_type{marriage}}) {
 			$html .= sprintf(
 				'<span style="color: blue; font-size: 20px;">●</span> %s (%s)<br>',
 				$event->{name},
@@ -204,7 +211,7 @@ sub generate_popup_html {
 	# Add deaths
 	if ($by_type{death}) {
 		$html .= "<b>Deaths:</b><br>";
-		foreach my $event (@{$by_type{death}}) {
+		foreach my $event (sort $sort_by_date @{$by_type{death}}) {
 			$html .= sprintf(
 				'<span style="color: red; font-size: 20px;">●</span> %s (%s)<br>',
 				$event->{name},
@@ -260,7 +267,7 @@ sub generate_osm_map {
 	my ($location_groups, $file) = @_;
 
 	# Create HTML::OSM object
-	my $osm = HTML::OSM->new(zoom => 11);
+	my $osm = HTML::OSM->new(zoom => 12);
 
 	# Add markers for each location
 	foreach my $loc_key (keys %$location_groups) {
