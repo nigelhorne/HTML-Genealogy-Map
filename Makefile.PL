@@ -39,6 +39,7 @@ WriteMakefile(
 		'HTML::GoogleMaps::V3' => 0,
 		'HTML::OSM' => 0,
 		'Gedcom' => 0,
+		'Object::Configure' => 0.15,
 		'Params::Get' => 0,
 		'Params::Validate::Strict' => 0,
 	}, dist => $dist,

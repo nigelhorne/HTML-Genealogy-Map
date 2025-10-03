@@ -1,7 +1,8 @@
-Revision history for HMTL-Genealogy-Map
+Revision history for HTML-Genealogy-Map
 
 0.03
 	Fix https://www.cpantesters.org/cpan/report/96d3899a-9ff8-11f0-bee0-9d09aee9520c
+	Use Object::Configure
 
 0.02	Fri Oct  3 13:04:06 EDT 2025
 	Remove unused modules in tests

@@ -11,6 +11,7 @@ use autodie;
 use Date::Cmp;
 use HTML::GoogleMaps::V3;
 use HTML::OSM;
+use Object::Configure 0.15;
 use Params::Get;
 use Params::Validate::Strict;
 
@@ -31,13 +32,6 @@ our $VERSION = '0.02';
 This module parses GEDCOM genealogy files and creates an interactive map showing
 the locations of births, marriages, and deaths. Events at the same location are
 grouped together in a single marker with a scrollable popup.
-
-The program uses a multi-tier geocoding strategy:
-1. Local geocoding cache (Geo::Coder::Free::Local)
-2. Free geocoding database (Geo::Coder::Free)
-3. OpenStreetMap Nominatim service (Geo::Coder::OSM)
-
-All geocoding results are cached to improve performance and reduce API calls.
 
 =head1 SUBROUTINES/METHODS
 
@@ -134,6 +128,8 @@ sub onload_render
 			'width' => { optional => 1 },
 		}
 	});
+
+	$params = Object::Configure::configure($class, $params);
 
 	my $ged = $params->{'gedcom'};
 	my $debug = $params->{'debug'};
@@ -412,6 +408,10 @@ Nigel Horne, C<< <njh at nigelhorne.com> >>
 =over 4
 
 =item * Test coverage report: L<https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/>
+
+=item * L<Object::Configure>
+
+The class is fully configurable at runtime with configuration files.
 
 =back
 

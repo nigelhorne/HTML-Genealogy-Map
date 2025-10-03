@@ -90,6 +90,9 @@ Nigel Horne, `<njh at nigelhorne.com>`
 # SEE ALSO
 
 - Test coverage report: [https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/](https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/)
+- [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure)
+
+    The class is fully configurable at runtime with configuration files.
 
 # REPOSITORY
 

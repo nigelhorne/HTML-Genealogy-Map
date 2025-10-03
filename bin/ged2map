@@ -2,6 +2,13 @@
 
 # Create a web page of events from a family tree
 
+# The program uses a multi-tier geocoding strategy:
+# 1. Local geocoding cache (Geo::Coder::Free::Local)
+# 2. Free geocoding database (Geo::Coder::Free)
+# 3. OpenStreetMap Nominatim service (Geo::Coder::OSM)
+
+# All geocoding results are cached to improve performance and reduce API calls.
+
 use strict;
 use warnings;
 
