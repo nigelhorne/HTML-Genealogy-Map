@@ -97,7 +97,9 @@ Enable print statements of what's going on
     'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
     'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
     'debug' => { 'type' => 'boolean', optional => 1 },
-    'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+    'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ },
+    'height' => { optional => 1 },
+    'width' => { optional => 1 }
   }
 
 =head4	OUTPUT
@@ -127,7 +129,9 @@ sub onload_render
 			'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
 			'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
 			'debug' => { 'type' => 'boolean', optional => 1 },
-			'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+			'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ },
+			'height' => { optional => 1 },
+			'width' => { optional => 1 },
 		}
 	});
 
@@ -135,6 +139,8 @@ sub onload_render
 	my $debug = $params->{'debug'};
 	my $google_key = $params->{'google_key'};
 	my $geocoder = $params->{'geocoder'};
+	my $height = $params->{'height'} || '400px';
+	my $width = $params->{'width'} || '600px';
 
 	# Storage for events
 	my @events;
@@ -245,9 +251,9 @@ sub onload_render
 	# Generate map based on available API key
 	my $map;
 	if ($google_key) {
-		$map = generate_google_map(\%location_groups, $google_key);
+		$map = generate_google_map(\%location_groups, $height, $width, $google_key);
 	} else {
-		$map = generate_osm_map(\%location_groups);
+		$map = generate_osm_map(\%location_groups, $height, $width);
 	}
 
 	return $map->onload_render();
@@ -327,12 +333,12 @@ sub generate_popup_html {
 
 # Generate Google Maps
 sub generate_google_map {
-	my ($location_groups, $file, $key) = @_;
+	my ($location_groups, $file, $key, $height, $width) = @_;
 
 	my $map = HTML::GoogleMaps::V3->new(
 		key => $key,
-		height => '600px',
-		width => '100%',
+		height => $height,
+		width => $width
 	);
 
 	# Add markers for each location
@@ -361,10 +367,10 @@ sub generate_google_map {
 
 # Generate OpenStreetMap using HTML::OSM
 sub generate_osm_map {
-	my ($location_groups, $file) = @_;
+	my ($location_groups, $file, $height, $width) = @_;
 
 	# Create HTML::OSM object
-	my $osm = HTML::OSM->new(zoom => 12);
+	my $osm = HTML::OSM->new(zoom => 12, height => $height, width => $width);
 
 	# Add markers for each location
 	foreach my $loc_key (keys %$location_groups) {

@@ -44,6 +44,8 @@ my $geocoder = Geo::Coder::List->new(
 )->push(Geo::Coder::Free::Local->new())->push(Geo::Coder::Free->new())->push(Geo::Coder::OSM->new());
 
 my $opts = {
+	height => '400px',
+	width => '600px',
 	gedcom => $gedcom,
 	debug => 1,
 	geocoder => $geocoder
@@ -77,13 +79,17 @@ sub render {
 		body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
 		#map {
 			margin: 0 auto; /* This centers it horizontally */
-			height: 90vh;
-			width: 80% !important;
+			/* height: 90vh;
+			width: 80% !important; */
+			height: 400px;
+			width: 600px;
 		}
 		#map > * {
 			margin: 0 auto; /* This centers child elements */
-			width: 100% !important; /* Use 100% to fill the parent, not 80% */
-			height: 100% !important;
+			/* width: 100% !important; /* Use 100% to fill the parent, not 80% */
+			/* height: 100% !important; */
+			height: 400px;
+			width: 600px;
 		}
 	</style>
 	$head
