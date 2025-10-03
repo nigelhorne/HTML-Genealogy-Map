@@ -12,13 +12,6 @@ This module parses GEDCOM genealogy files and creates an interactive map showing
 the locations of births, marriages, and deaths. Events at the same location are
 grouped together in a single marker with a scrollable popup.
 
-The program uses a multi-tier geocoding strategy:
-1\. Local geocoding cache (Geo::Coder::Free::Local)
-2\. Free geocoding database (Geo::Coder::Free)
-3\. OpenStreetMap Nominatim service (Geo::Coder::OSM)
-
-All geocoding results are cached to improve performance and reduce API calls.
-
 # SUBROUTINES/METHODS
 
 ## onload\_render
