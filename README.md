@@ -4,7 +4,7 @@ HTML::Genealogy::Map - Extract and map genealogical events from GEDCOM file
 
 # VERSION
 
-Version 0.01
+Version 0.02
 
 # DESCRIPTION
 
@@ -62,7 +62,9 @@ It returns an array of two elements, the items for the `head` and `body`.
       'gedcom' => { 'type' => 'object', 'can' => 'individuals' },
       'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
       'debug' => { 'type' => 'boolean', optional => 1 },
-      'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ }
+      'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ },
+      'height' => { optional => 1 },
+      'width' => { optional => 1 }
     }
 
 #### OUTPUT
@@ -127,7 +129,7 @@ You can also look for information at:
 
 # LICENCE AND COPYRIGHT
 
-Copyright 2010-2025 Nigel Horne.
+Copyright 2025 Nigel Horne.
 
 Usage is subject to licence terms.
 

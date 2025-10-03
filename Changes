@@ -1,6 +1,6 @@
 Revision history for HMTL-Genealogy-Map
 
-0.02
+0.02	Fri Oct  3 13:04:06 EDT 2025
 	Remove unused modules in tests
 	Allow the height/width to be set
 
