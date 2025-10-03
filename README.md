@@ -4,7 +4,7 @@ HTML::Genealogy::Map - Extract and map genealogical events from GEDCOM file
 
 # VERSION
 
-Version 0.02
+Version 0.03
 
 # DESCRIPTION
 
