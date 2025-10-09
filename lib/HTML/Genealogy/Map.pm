@@ -145,6 +145,7 @@ sub onload_render
 
 	# Process all individuals
 	foreach my $indi ($ged->individuals) {
+		next unless(ref($indi));
 		my $name = $indi->name || 'Unknown';
 		$name =~ s/\///g;	# Remove GEDCOM name delimiters
 
