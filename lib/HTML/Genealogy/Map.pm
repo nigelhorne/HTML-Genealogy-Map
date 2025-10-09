@@ -176,6 +176,7 @@ sub onload_render
 
 	# Process all families (marriages)
 	foreach my $fam ($ged->families) {
+		next unless defined($fam);	# Yes, really
 		my $husband = $fam->husband ? ($fam->husband->name || 'Unknown') : 'Unknown';
 		my $wife = $fam->wife ? ($fam->wife->name || 'Unknown') : 'Unknown';
 		$husband =~ s/\///g;
