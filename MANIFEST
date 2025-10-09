@@ -11,6 +11,7 @@ scripts/generate_index.pl
 t/00-load.t
 t/10-compile.t
 t/30-basics.t
+t/conf/html_genealogy_map.conf
 t/eof.t
 t/eol.t
 t/fuzz.t
