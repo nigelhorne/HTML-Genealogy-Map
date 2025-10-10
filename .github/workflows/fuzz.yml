@@ -1,0 +1,39 @@
+---
+name: Fuzz Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  fuzz_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        perl-version: ['5.36', '5.38']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl-version }}
+
+      - name: Install dependencies
+        run: |
+          cpanm --installdeps --with-develop .
+
+      - name: Install App::Test::Generator
+        run: |
+          cpanm App::Test::Generator
+
+      - name: Generate fuzz tests
+        run: |
+          fuzz-harness-generator t/conf/online_render.yml > t/online_render_fuzz.t
+
+      - name: Run the generated fuzz test
+        run: |
+          prove -lv t/online_render_fuzz.t
