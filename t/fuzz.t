@@ -94,6 +94,7 @@ sub rand_unicode_char {
 # Generate a string: mostly ASCII, sometimes unicode, sometimes nul bytes or combining marks
 sub rand_str {
 	my $len = shift || int(rand(10)) + 1;
+
 	my @chars;
 	for (1..$len) {
 		my $r = rand();
@@ -123,16 +124,17 @@ sub rand_str {
 sub rand_char
 {
 	return rand_chars(set => 'all', min => 1, max => 1);
-	my $char = '';
-	my $upper_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	my $lower_chars = 'abcdefghijklmnopqrstuvwxyz';
-	my $combined_chars = $upper_chars . $lower_chars;
 
-	# Generate a random index between 0 and the length of the string minus 1
-	my $rand_index = int(rand(length($combined_chars)));
+	# my $char = '';
+	# my $upper_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	# my $lower_chars = 'abcdefghijklmnopqrstuvwxyz';
+	# my $combined_chars = $upper_chars . $lower_chars;
 
-	# Get the character at that index
-	return substr($combined_chars, $rand_index, 1);
+	# # Generate a random index between 0 and the length of the string minus 1
+	# my $rand_index = int(rand(length($combined_chars)));
+
+	# # Get the character at that index
+	# return substr($combined_chars, $rand_index, 1);
 }
 
 # Integer generator: mix typical small ints with large limits
@@ -221,6 +223,9 @@ sub fuzz_inputs {
 				# Is hello allowed?
 				if(!defined($input{'memberof'}) || (grep { $_ eq 'hello' } @{$input{'memberof'}})) {
 					push @cases, { _input => 'hello' };
+				} elsif(defined($input{'memberof'}) && !defined($input{'max'})) {
+					# Data::Random
+					push @cases, { _input => rand_set(set => $input{'memberof'}, size => 1) }
 				} else {
 					push @cases, { _input => 'hello', _STATUS => 'DIES' };
 				}
@@ -269,6 +274,9 @@ sub fuzz_inputs {
 						if('hello' =~ $re) {
 							if(!defined($spec->{'memberof'}) || (grep { $_ eq 'hello' } @{$spec->{'memberof'}})) {
 								push @cases, { %mandatory_strings, %mandatory_objects, ( $field => 'hello' ) };
+							} elsif(defined($spec->{'memberof'}) && !defined($spec->{'max'})) {
+								# Data::Random
+								push @cases, { %mandatory_strings, %mandatory_objects, _input => rand_set(set => $spec->{'memberof'}, size => 1) }
 							} else {
 								push @cases, { %mandatory_strings, %mandatory_objects, ( $field => 'hello', _STATUS => 'DIES' ) };
 							}
@@ -286,6 +294,9 @@ sub fuzz_inputs {
 						# '' should die unless it's in the memberof list
 						if(defined($spec->{'memberof'}) && (!grep { $_ eq '' } @{$spec->{'memberof'}})) {
 							push @cases, { %mandatory_strings, %mandatory_objects, ( $field => '', _name => $field, _STATUS => 'DIES' ) }
+						} elsif(defined($spec->{'memberof'}) && !defined($spec->{'max'})) {
+							# Data::Random
+							push @cases, { %mandatory_strings, %mandatory_objects, _input => rand_set(set => $spec->{'memberof'}, size => 1) }
 						} else {
 							push @cases, { %mandatory_strings, %mandatory_objects, ( $field => '', _name => $field ) } if((!exists($spec->{min})) || ($spec->{min} == 0));
 						}
