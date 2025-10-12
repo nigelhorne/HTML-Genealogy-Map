@@ -331,7 +331,7 @@ sub generate_popup_html {
 
 # Generate Google Maps
 sub generate_google_map {
-	my ($location_groups, $file, $key, $height, $width) = @_;
+	my ($location_groups, $height, $width, $key) = @_;
 
 	my $map = HTML::GoogleMaps::V3->new(
 		key => $key,
@@ -365,7 +365,7 @@ sub generate_google_map {
 
 # Generate OpenStreetMap using HTML::OSM
 sub generate_osm_map {
-	my ($location_groups, $file, $height, $width) = @_;
+	my ($location_groups, $height, $width) = @_;
 
 	# Create HTML::OSM object
 	my $osm = HTML::OSM->new(zoom => 12, height => $height, width => $width);
