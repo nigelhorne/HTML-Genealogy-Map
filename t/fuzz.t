@@ -7,6 +7,7 @@ use utf8;
 use open qw(:std :encoding(UTF-8));	# https://github.com/nigelhorne/App-Test-Generator/issues/1
 
 use Data::Dumper;
+use Data::Random qw(:all);
 use Test::Most;
 use Test::Returns 0.02;
 use JSON::MaybeXS;
@@ -121,6 +122,7 @@ sub rand_str {
 # Random character either upper or lower case
 sub rand_char
 {
+	return rand_chars(set => 'all', min => 1, max => 1);
 	my $char = '';
 	my $upper_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	my $lower_chars = 'abcdefghijklmnopqrstuvwxyz';
@@ -363,7 +365,7 @@ sub fuzz_inputs {
 					$case_input = rand_str();
 				} elsif($type eq 'integer') {
 					$case_input = rand_int();
-				} elsif($type eq 'number') {
+				} elsif(($type eq 'number') || ($type eq 'float')) {
 					$case_input = rand_num();
 				} elsif($type eq 'boolean') {
 					$case_input = rand_bool();
@@ -463,7 +465,7 @@ sub fuzz_inputs {
 			}
 			# outside value
 			my $outside;
-			if ($type eq 'integer' || $type eq 'number') {
+			if(($type eq 'integer') || ($type eq 'number') || ($type eq 'float')) {
 				$outside = (sort { $a <=> $b } @{$input{memberof}})[-1] + 1;
 			} else {
 				$outside = 'INVALID_MEMBEROF';

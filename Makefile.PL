@@ -37,6 +37,7 @@ WriteMakefile(
 		'Params::Validate::Strict' => 0.16,
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
+		'Data::Random' => 0,
 		'IPC::System::Simple' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
