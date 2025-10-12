@@ -34,7 +34,7 @@ WriteMakefile(
 		'Gedcom' => 0,
 		'Object::Configure' => 0.15,
 		'Params::Get' => 0,
-		'Params::Validate::Strict' => 0,
+		'Params::Validate::Strict' => 0.16,
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
 		'IPC::System::Simple' => 0,

@@ -13,7 +13,7 @@ use HTML::GoogleMaps::V3;
 use HTML::OSM;
 use Object::Configure 0.15;
 use Params::Get;
-use Params::Validate::Strict;
+use Params::Validate::Strict 0.16;
 
 =head1 NAME
 
