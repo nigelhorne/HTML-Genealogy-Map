@@ -17,7 +17,7 @@ use Params::Validate::Strict;
 
 =head1 NAME
 
-HTML::Genealogy::Map - Extract and map genealogical events from GEDCOM file
+HTML::Genealogy::Map - Extract and map genealogical events from a GEDCOM file
 
 =head1 VERSION
 
@@ -148,6 +148,7 @@ sub onload_render
 		next unless(ref($indi));
 		my $name = $indi->name || 'Unknown';
 		$name =~ s/\///g;	# Remove GEDCOM name delimiters
+		$name =~ s/'/&apos;/g;	# Probably this is enough HTML::Entities
 
 		# Birth events
 		if (my $birth = $indi->birth) {
@@ -176,17 +177,21 @@ sub onload_render
 
 	# Process all families (marriages)
 	foreach my $fam ($ged->families) {
-		next unless defined($fam);	# Yes, really
-		my $husband = $fam->husband ? ($fam->husband->name || 'Unknown') : 'Unknown';
-		my $wife = $fam->wife ? ($fam->wife->name || 'Unknown') : 'Unknown';
+		next unless defined($fam) && ref($fam);	# Yes, really
+
+		my $husband = (ref($fam->husband) && $fam->husband->name) ? $fam->husband->name : 'Unknown';
+		my $wife = (ref($fam->wife) && $fam->wife->name) ? $fam->wife->name : 'Unknown';
+
 		$husband =~ s/\///g;
 		$wife =~ s/\///g;
 
 		if (my $marriage = $fam->marriage) {
 			if (ref($marriage) && (my $place = $marriage->place)) {
+				$husband =~ s/'/&apos;/;
+				$wife =~ s/'/&apos;/;
 				push @events, {
 					type => 'marriage',
-					name => "$husband & $wife",
+					name => "$husband &amp; $wife",
 					place => $place,
 					date => $marriage->date || 'Unknown date',
 				};
@@ -199,7 +204,7 @@ sub onload_render
 
 	# Geocode all events
 	my @geocoded_events;
-	my %cache;
+	my %cache;	# TODO allow use of params->{cache} if given
 
 	foreach my $event (@events) {
 		my $place = $event->{place};
@@ -244,8 +249,6 @@ sub onload_render
 		push @{$location_groups{$key}}, $event;
 	}
 
-	print "Generating map\n" if($debug);
-
 	# Generate map based on available API key
 	my $map;
 	if ($google_key) {
@@ -282,8 +285,15 @@ sub generate_popup_html {
 
 	# Sort function for dates
 	my $sort_by_date = sub {
-		return 0 if(($a->{'date'} =~ /^Unknown/i) || ($b->{'date'} =~ /^Unknown/));
-		return Date::Cmp::datecmp($a->{'date'}, $b->{'date'});
+		my $date_a = $a->{'date'};
+		my $date_b = $b->{'date'};
+
+		# Put unknown dates at the end
+		return 1 if $date_a =~ /^Unknown/i && $date_b !~ /^Unknown/i;
+		return -1 if $date_b =~ /^Unknown/i && $date_a !~ /^Unknown/i;
+		return 0 if $date_a =~ /^Unknown/i && $date_b =~ /^Unknown/i;
+
+		return Date::Cmp::datecmp($date_a, $date_b);
 	};
 
 	# Add births
