@@ -65,7 +65,7 @@
 	<a href="https://github.com/nigelhorne/HTML-Genealogy-Map">
 		<img src="https://img.shields.io/github/stars/nigelhorne/HTML-Genealogy-Map?style=social" alt="GitHub stars">
 	</a>
-	<img src="https://img.shields.io/badge/coverage-81%25-brightgreen" alt="Coverage badge">
+	<img src="https://img.shields.io/badge/coverage-80%25-yellow" alt="Coverage badge">
 </div>
 <h1>HTML::Genealogy::Map</h1><h2>Coverage Report</h2>
 <table data-sort-col="0" data-sort-order="asc">
@@ -84,11 +84,11 @@
 
 <tbody>
 
-<tr class="med"><td><a href="blib-lib-HTML-Genealogy-Map-pm.html" title="View coverage line by line" target="_blank">blib/lib/HTML/Genealogy/Map.pm</a> <a href="https://github.com/nigelhorne/HTML-Genealogy-Map/blob/86655fb0f980d1c319b862094c181ca366af5e64/blib/lib/HTML/Genealogy/Map.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="81.4,81.4,81.4,81.4,81.4,81.4,81.1,81.1,81.4,81.1,81.4,81.3"></canvas></td><td>89.9</td><td>72.6</td><td>50.0</td><td>93.8</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">81.1%</span></td><td class="negative" title="Previous: 81.3%">&#9660; 0.2%</td></tr>
+<tr class="med"><td><a href="blib-lib-HTML-Genealogy-Map-pm.html" title="View coverage line by line" target="_blank">blib/lib/HTML/Genealogy/Map.pm</a> <a href="https://github.com/nigelhorne/HTML-Genealogy-Map/blob/1787778f3c9dbd252c165cd9eeebfea55c6f57bf/blib/lib/HTML/Genealogy/Map.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="81.4,81.4,81.4,81.4,81.4,81.4,81.1,81.1,81.4,81.1,81.4,81.3,81.1"></canvas></td><td>90.2</td><td>75.0</td><td>46.7</td><td>93.8</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">80.3%</span></td><td class="negative" title="Previous: 81.1%">&#9660; 0.8%</td></tr>
 
-<tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">1 files</td><td colspan="3">Avg: 81%, Low: 0</td></tr>
+<tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">1 files</td><td colspan="3">Avg: 80%, Low: 0</td></tr>
 
-<tr class="high nosort"><td><strong>Total</strong></td><td>89.9</td><td>72.6</td><td>50.0</td><td>93.8</td><td colspan="2"><strong>81.1</strong></td></tr>
+<tr class="high nosort"><td><strong>Total</strong></td><td>90.2</td><td>75.0</td><td>46.7</td><td>93.8</td><td colspan="2"><strong>80.3</strong></td></tr>
 
 </tbody></table>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em;">
@@ -140,7 +140,8 @@ const dataPoints = [ { x: "2025-10-02T11:34:02-04:00", y: 81.4229249011858, delt
 { x: "2025-10-03T13:04:29-04:00", y: 81.0810810810811, delta: 0.0, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/24a769e", label: "2025-10-03T13:04:29-04:00", pointBackgroundColor: "gray", comment: "Release 0.02" },
 { x: "2025-10-03T13:07:18-04:00", y: 81.0810810810811, delta: 0.0, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/05ddc68", label: "2025-10-03T13:07:18-04:00", pointBackgroundColor: "gray", comment: "Fix https://www.cpantesters.org/cpan/report/96d3899a-9ff8-11f0-bee0-9d09aee9520c" },
 { x: "2025-10-03T17:02:20-04:00", y: 81.4393939393939, delta: 0.4, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/f4a26df", label: "2025-10-03T17:02:20-04:00", pointBackgroundColor: "green", comment: "Use Object::Configure" },
-{ x: "2025-10-09T14:03:37-04:00", y: 81.2734082397004, delta: -0.2, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/66881ae", label: "2025-10-09T14:03:37-04:00", pointBackgroundColor: "red", comment: "Sanity check on the gedcom" } ];
+{ x: "2025-10-09T14:03:37-04:00", y: 81.2734082397004, delta: -0.2, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/66881ae", label: "2025-10-09T14:03:37-04:00", pointBackgroundColor: "red", comment: "Sanity check on the gedcom" },
+{ x: "2025-10-09T14:15:17-04:00", y: 81.1111111111111, delta: -0.2, url: "https://github.com/nigelhorne/HTML-Genealogy-Map/commit/86655fb", label: "2025-10-09T14:15:17-04:00", pointBackgroundColor: "red", comment: "Sanity check on the gedcom" } ];
 
 const regressionPoints = linearRegression(dataPoints);
 // Try to register the zoom plugin (handles different UMD builds)
@@ -401,7 +402,7 @@ function refresh(){
 <footer>
 	<p><span style="margin-left:8px;color:#666;font-size:0.9em;">Use mouse wheel or pinch to zoom; drag to pan</span></p>
 	<p>Project: <a href="https://github.com/nigelhorne/HTML-Genealogy-Map">HTML-Genealogy-Map</a></p>
-	<p><em>Last updated: 2025-10-09 18:21:24 - <a href="https://github.com/nigelhorne/HTML-Genealogy-Map/commit/86655fb0f980d1c319b862094c181ca366af5e64">commit <code>86655fb</code></a></em></p>
+	<p><em>Last updated: 2025-10-13 15:21:03 - <a href="https://github.com/nigelhorne/HTML-Genealogy-Map/commit/1787778f3c9dbd252c165cd9eeebfea55c6f57bf">commit <code>1787778</code></a></em></p>
 </footer>
 </body>
 </html>
