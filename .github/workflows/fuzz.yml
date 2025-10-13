@@ -31,7 +31,7 @@ jobs:
         run: |
           find t/conf -name '*.yml' | while read config; do
             test_name=$(basename "$config" .conf)
-            fuzz-harness-generator "$config" > "t/generated/${test_name}_fuzz.t"
+            fuzz-harness-generator "$config" > "t/${test_name}_fuzz.t"
           done
 
       - name: Run generated fuzz tests

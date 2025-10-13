@@ -301,7 +301,7 @@ sub generate_popup_html {
 		$html .= '<b>Births:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{birth}}) {
 			$html .= sprintf(
-				'<span style="color: green; font-size: 20px;">●</span> %s (%s)<br>',
+				'<span style="color: green; font-size: 20px;">&#x25CF;</span> %s (%s)<br>',
 				$event->{name},
 				$event->{date}
 			);
@@ -314,7 +314,7 @@ sub generate_popup_html {
 		$html .= '<b>Marriages:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{marriage}}) {
 			$html .= sprintf(
-				'<span style="color: blue; font-size: 20px;">●</span> %s (%s)<br>',
+				'<span style="color: blue; font-size: 20px;">&#x25CF;</span> %s (%s)<br>',
 				$event->{name},
 				$event->{date}
 			);
@@ -327,7 +327,7 @@ sub generate_popup_html {
 		$html .= '<b>Deaths:</b><br>';
 		foreach my $event (sort $sort_by_date @{$by_type{death}}) {
 			$html .= sprintf(
-				'<span style="color: red; font-size: 20px;">●</span> %s (%s)<br>',
+				'<span style="color: red; font-size: 20px;">&#x25CF;</span> %s (%s)<br>',
 				$event->{name},
 				$event->{date}
 			);
