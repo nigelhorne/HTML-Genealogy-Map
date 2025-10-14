@@ -12,7 +12,7 @@ use Date::Cmp;
 use HTML::GoogleMaps::V3;
 use HTML::OSM;
 use Object::Configure 0.15;
-use Params::Get;
+use Params::Get 0.13;
 use Params::Validate::Strict 0.16;
 
 =head1 NAME
@@ -252,16 +252,16 @@ sub onload_render
 	# Generate map based on available API key
 	my $map;
 	if ($google_key) {
-		$map = generate_google_map(\%location_groups, $height, $width, $google_key);
+		$map = _generate_google_map(\%location_groups, $height, $width, $google_key);
 	} else {
-		$map = generate_osm_map(\%location_groups, $height, $width);
+		$map = _generate_osm_map(\%location_groups, $height, $width);
 	}
 
 	return $map->onload_render();
 }
 
 # Generate HTML for grouped events
-sub generate_popup_html {
+sub _generate_popup_html {
 	my ($events) = @_;
 
 	my $place = $events->[0]{place};
@@ -340,7 +340,7 @@ sub generate_popup_html {
 }
 
 # Generate Google Maps
-sub generate_google_map {
+sub _generate_google_map {
 	my ($location_groups, $height, $width, $key) = @_;
 
 	my $map = HTML::GoogleMaps::V3->new(
@@ -355,7 +355,7 @@ sub generate_google_map {
 		my $events = $location_groups->{$loc_key};
 		my ($lat, $lon) = split /,/, $loc_key;
 
-		my $html = generate_popup_html($events);
+		my $html = _generate_popup_html($events);
 
 		$map->add_marker(
 			point => [$lat, $lon],
@@ -374,7 +374,7 @@ sub generate_google_map {
 }
 
 # Generate OpenStreetMap using HTML::OSM
-sub generate_osm_map {
+sub _generate_osm_map {
 	my ($location_groups, $height, $width) = @_;
 
 	# Create HTML::OSM object
@@ -385,7 +385,7 @@ sub generate_osm_map {
 		my $events = $location_groups->{$loc_key};
 		my ($lat, $lon) = split /,/, $loc_key;
 
-		my $html = generate_popup_html($events);
+		my $html = _generate_popup_html($events);
 
 		$osm->add_marker(
 			point => [$lat, $lon],

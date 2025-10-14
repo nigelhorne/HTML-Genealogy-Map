@@ -1,6 +1,6 @@
 Revision history for HTML-Genealogy-Map
 
-0.04
+0.04	Tue Oct 14 19:59:34 EDT 2025
 	Sanity check on the gedcom
 	Added fuzz testing in GitHub Actions
 	Put unknown dates at the end

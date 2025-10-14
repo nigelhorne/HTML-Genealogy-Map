@@ -33,7 +33,7 @@ WriteMakefile(
 		'HTML::OSM' => 0,
 		'Gedcom' => 0,
 		'Object::Configure' => 0.15,
-		'Params::Get' => 0,
+		'Params::Get' => 0.13,
 		'Params::Validate::Strict' => 0.16,
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
@@ -61,9 +61,10 @@ WriteMakefile(
 				# license    => 'http://dev.perl.org/licenses/',
 			}, bugtracker => {
 				mailto => 'bug-HTML-Genealogy-Map@rt.cpan.org',
-				url => 'https://github.com/nigelhorne/HTML-Genealogy-Map/issues',
-				# web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=HTML-Genealogy-Map',
-				web => 'https://github.com/nigelhorne/HTML-Genealogy-Map/issues'
+				url => 'https://rt.cpan.org/Public/Dist/Display.html?Name=HTML-Genealogy-Map',
+				web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=HTML-Genealogy-Map',
+				# url => 'https://github.com/nigelhorne/HTML-Genealogy-Map/issues',
+				# web => 'https://github.com/nigelhorne/HTML-Genealogy-Map/issues'
 			}
 		},
 	},
