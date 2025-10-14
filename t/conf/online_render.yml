@@ -1,5 +1,5 @@
 ---
-# Pass through App::Test::Generator
+# Pass through App::Test::Generator/fuzz-harness-generator
 
 module: HTML::Genealogy::Map
 function: onload_render
