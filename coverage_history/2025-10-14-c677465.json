@@ -1,0 +1,296 @@
+{
+   "runs" : [
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407722.33321,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407722.33284,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407722.50757,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407722.50724,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407722.67804,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407722.67763,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407722.84788,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407722.84743,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.01671,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.01637,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.18487,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.18458,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.35233,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.35198,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.51994,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.51967,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.70411,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.69537,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407723.93107,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407723.93058,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407732.43422,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407724.12883,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407724.27621,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1760407724.27607,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407725.03586,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/00-load.t",
+         "start" : 1760407725.03461,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407725.35783,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/10-compile.t",
+         "start" : 1760407725.35778,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407730.21755,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/30-basics.t",
+         "start" : 1760407726.11805,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407730.61649,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/eof.t",
+         "start" : 1760407730.61627,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407730.84741,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/eol.t",
+         "start" : 1760407730.84718,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407731.78059,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/fuzz.t",
+         "start" : 1760407731.60938,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407732.16412,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/pod-cm.t",
+         "start" : 1760407732.1639,
+         "version" : "0.03"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Extract and map genealogical events from a GEDCOM file",
+         "dir" : "/home/runner/work/HTML-Genealogy-Map/HTML-Genealogy-Map",
+         "finish" : 1760407732.39678,
+         "name" : "HTML-Genealogy-Map",
+         "perl" : "5.40.3",
+         "run" : "t/pod-coverage.t",
+         "start" : 1760407732.39656,
+         "version" : "0.03"
+      }
+   ],
+   "summary" : {
+      "Total" : {
+         "branch" : {
+            "covered" : 48,
+            "error" : 16,
+            "percentage" : 75,
+            "total" : 64,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 21,
+            "error" : 24,
+            "percentage" : 46.6666666666667,
+            "total" : 45,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 148,
+            "error" : 16,
+            "percentage" : 90.2439024390244,
+            "total" : 164
+         },
+         "subroutine" : {
+            "covered" : 15,
+            "error" : 1,
+            "percentage" : 93.75,
+            "total" : 16
+         },
+         "total" : {
+            "covered" : 232,
+            "error" : 57,
+            "percentage" : 80.2768166089965,
+            "total" : 289,
+            "uncoverable" : 0
+         }
+      },
+      "blib/lib/HTML/Genealogy/Map.pm" : {
+         "branch" : {
+            "covered" : 48,
+            "error" : 16,
+            "percentage" : 75,
+            "total" : 64,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 21,
+            "error" : 24,
+            "percentage" : 46.6666666666667,
+            "total" : 45,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 148,
+            "error" : 16,
+            "percentage" : 90.2439024390244,
+            "total" : 164
+         },
+         "subroutine" : {
+            "covered" : 15,
+            "error" : 1,
+            "percentage" : 93.75,
+            "total" : 16
+         },
+         "total" : {
+            "covered" : 232,
+            "error" : 57,
+            "percentage" : 80.2768166089965,
+            "total" : 289,
+            "uncoverable" : 0
+         }
+      }
+   }
+}
