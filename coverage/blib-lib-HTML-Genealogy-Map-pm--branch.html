@@ -20,11 +20,12 @@ https://pjcj.net
 <h1>Branch Coverage</h1>
 <table>
 <tr><td class="h" align="right">File:</td><td align="left">blib/lib/HTML/Genealogy/Map.pm</td></tr>
-<tr><td class="h" align="right">Coverage:</td><td align="left" class="c1">75.0%</td></tr>
+<tr><td class="h" align="right">Coverage:</td><td align="left" class="c1">75.8%</td></tr>
 </table>
 <div><br/></div>
 <table>
 <tr><th>line</th><th>%</th><th colspan="2">coverage</th><th>branch</th></tr>
+<tr><td class="h"><a id="L117">117</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $_[0] ? :</td></tr>
 <tr><td class="h"><a id="L144">144</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
 <tr><td class="h"><a id="L148">148</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ref $indi</td></tr>
 <tr><td class="h"><a id="L154">154</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $birth = $indi-&gt;birth)</td></tr>
@@ -39,9 +40,9 @@ https://pjcj.net
 <tr><td class="h"><a id="L202">202</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
 <tr><td class="h"><a id="L203">203</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
 <tr><td class="h"><a id="L213">213</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (exists $cache{$place})</td></tr>
-<tr><td class="h"><a id="L215">215</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($location and $$location{&#39;lat&#39;} and $$location{&#39;lon&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L215">215</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($location and $location-&gt;{&#39;lat&#39;} and $location-&gt;{&#39;lon&#39;}) { }</td></tr>
 <tr><td class="h"><a id="L220">220</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
-<tr><td class="h"><a id="L221">221</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $$location{&quot;geocoder&quot;} =~ /^Geo::Coder::Free/</td></tr>
+<tr><td class="h"><a id="L221">221</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $location-&gt;{&#39;geocoder&#39;} =~ /^Geo::Coder::Free/</td></tr>
 <tr><td class="h"><a id="L224">224</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
 <tr><td class="h"><a id="L230">230</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($cache{$place})</td></tr>
 <tr><td class="h"><a id="L239">239</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $debug</td></tr>
@@ -52,9 +53,9 @@ https://pjcj.net
 <tr><td class="h"><a id="L292">292</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and not $date_b =~ /^Unknown/i</td></tr>
 <tr><td class="h"><a id="L293">293</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_b =~ /^Unknown/i and not $date_a =~ /^Unknown/i</td></tr>
 <tr><td class="h"><a id="L294">294</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and $date_b =~ /^Unknown/i</td></tr>
-<tr><td class="h"><a id="L300">300</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&quot;birth&quot;})</td></tr>
-<tr><td class="h"><a id="L313">313</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&quot;marriage&quot;})</td></tr>
-<tr><td class="h"><a id="L326">326</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&quot;death&quot;})</td></tr>
+<tr><td class="h"><a id="L300">300</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;birth&#39;})</td></tr>
+<tr><td class="h"><a id="L313">313</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;marriage&#39;})</td></tr>
+<tr><td class="h"><a id="L326">326</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;death&#39;})</td></tr>
 <tr><td class="h"><a id="L366">366</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($first)</td></tr>
 <tr><td class="h"><a id="L401">401</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($event_count &gt; $max_events)</td></tr>
 </table>
