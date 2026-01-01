@@ -114,7 +114,7 @@ Returns an array of two strings:
 
 sub onload_render
 {
-	my $class = shift;
+	my $class = ref($_[0]) ? __PACKAGE__ : shift;
 
 	# Configuration
 	my $params = Params::Validate::Strict::validate_strict({

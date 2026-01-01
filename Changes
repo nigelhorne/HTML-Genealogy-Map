@@ -1,5 +1,8 @@
 Revision history for HTML-Genealogy-Map
 
+0.05
+	Allow to online_render to be called by -> or ::
+
 0.04	Tue Oct 14 19:59:34 EDT 2025
 	Sanity check on the gedcom
 	Added fuzz testing in GitHub Actions
