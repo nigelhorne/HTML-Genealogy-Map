@@ -38,12 +38,15 @@ WriteMakefile(
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
 		'Data::Random' => 0,
+		'FindBin' => 0,
+		'IPC::Run3' => 0,
 		'IPC::System::Simple' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
 		'Test::Needs' => 0,
 		'Test::NoWarnings' => 0,
 		'Test::Returns' => 0,
+		'Test::Which' => 0,
 	}, dist => $dist,
 	clean		=> { FILES => 'HTML-Genealogy-Map-*' },
 	# META_ADD => {
