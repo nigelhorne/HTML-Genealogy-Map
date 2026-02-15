@@ -124,8 +124,8 @@ sub onload_render
 			'geocoder' => { 'type' => 'object', 'can' => 'geocode' },
 			'debug' => { 'type' => 'boolean', optional => 1 },
 			'google_key' => { 'type' => 'string', optional => 1, min => 39, max => 39, matches => qr/^AIza[0-9A-Za-z_-]{35}$/ },
-			'height' => { optional => 1 },
-			'width' => { optional => 1 },
+			'height' => { optional => 1, type => 'string' },
+			'width' => { optional => 1, type => 'string' },
 		}
 	});
 
