@@ -84,18 +84,12 @@ Returns an array of two strings:
 }
 ```
 
-## Author
-
-Nigel Horne, `<njh at nigelhorne.com>`
-
 ## Bugs
 
 ## See Also
 
-- Test coverage report: [https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/](https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/)
-- [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure)
-
-    The class is fully configurable at runtime with configuration files.
+- [Test Dashboard](https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/)
+- [Configure an Object at Runtime](https://metacpan.org/pod/Object%3A%3AConfigure)
 
 ## Repository
 
@@ -135,15 +129,14 @@ You can also look for information at:
 
     [http://deps.cpantesters.org/?module=HTML::Genalogy::Map](http://deps.cpantesters.org/?module=HTML::Genalogy::Map)
 
+## Author
+
+Nigel Horne, `<njh at nigelhorne.com>`
+
 ## Licence and Copyright
 
-Copyright 2025 Nigel Horne.
+Copyright 2025-2026 Nigel Horne.
 
-Usage is subject to licence terms.
-
-The licence terms of this software are as follows:
-
-- Personal single user, single computer use: GPL2
-- All other users (including Commercial, Charity, Educational, Government)
-  must apply in writing for a licence for use from Nigel Horne at the
-  above e-mail.
+Usage is subject to the GPL2 licence terms.
+If you use it,
+please let me know.

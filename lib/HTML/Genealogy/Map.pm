@@ -469,21 +469,15 @@ sub _generate_osm_map {
 	return $osm;
 }
 
-=head1 AUTHOR
-
-Nigel Horne, C<< <njh at nigelhorne.com> >>
-
 =head1 BUGS
 
 =head1 SEE ALSO
 
 =over 4
 
-=item * Test coverage report: L<https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/>
+=item * L<Test Dashboard|https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/>
 
-=item * L<Object::Configure>
-
-The class is fully configurable at runtime with configuration files.
+=item * L<Configure an Object at Runtime|Object::Configure>
 
 =back
 
@@ -527,23 +521,17 @@ L<http://deps.cpantesters.org/?module=HTML::Genalogy::Map>
 
 =back
 
+=head1 AUTHOR
+
+Nigel Horne, C<< <njh at nigelhorne.com> >>
+
 =head1 LICENCE AND COPYRIGHT
 
-Copyright 2025 Nigel Horne.
+Copyright 2025-2026 Nigel Horne.
 
-Usage is subject to licence terms.
-
-The licence terms of this software are as follows:
-
-=over 4
-
-=item * Personal single user, single computer use: GPL2
-
-=item * All other users (including Commercial, Charity, Educational, Government)
-  must apply in writing for a licence for use from Nigel Horne at the
-  above e-mail.
-
-=back
+Usage is subject to the GPL2 licence terms.
+If you use it,
+please let me know.
 
 =cut
 
