@@ -1,6 +1,6 @@
 Revision history for HTML-Genealogy-Map
 
-0.05
+0.05	Thu Oct 15 11:43:35 AM EDT 2026
 	Allow to online_render to be called by -> or ::
 	Read a geocoder result through the coordinates it actually has
 	- {lat}/{long}/{lng}, or latitude()/longitude() for an object such as Geo::Location::Point. A 'lon' key was used to decide whether a lookup had
