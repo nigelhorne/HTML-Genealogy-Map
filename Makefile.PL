@@ -35,8 +35,10 @@ WriteMakefile(
 		'Object::Configure' => 0.15,
 		'Params::Get' => 0.13,
 		'Params::Validate::Strict' => 0.16,
+		'Scalar::Util' => 0,
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
+		'Geo::Location::Point' => 0,
 		'Data::Random' => 0,
 		'FindBin' => 0,
 		'IPC::Run3' => 0,
@@ -47,6 +49,7 @@ WriteMakefile(
 		'Test::NoWarnings' => 0,
 		'Test::Returns' => 0,
 		'Test::Which' => 0,
+		'Time::HiRes' => 0,
 	}, dist => $dist,
 	clean		=> { FILES => 'HTML-Genealogy-Map-*' },
 	# META_ADD => {
