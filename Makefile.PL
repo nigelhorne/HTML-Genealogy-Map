@@ -38,6 +38,7 @@ WriteMakefile(
 		'Scalar::Util' => 0,
 	}, TEST_REQUIRES => {
 		'Class::Simple' => 0,
+		'Geo::Coder::Free' => 0,
 		'Geo::Location::Point' => 0,
 		'Data::Random' => 0,
 		'FindBin' => 0,

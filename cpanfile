@@ -20,6 +20,7 @@ on 'test' => sub {
 	requires 'Class::Simple';
 	requires 'Data::Random';
 	requires 'FindBin';
+	requires 'Geo::Coder::Free';
 	requires 'Geo::Location::Point';
 	requires 'IPC::Run3';
 	requires 'IPC::System::Simple';
