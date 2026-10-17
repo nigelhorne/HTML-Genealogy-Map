@@ -1,6 +1,6 @@
 Revision history for HTML-Genealogy-Map
 
-0.06
+0.06	Sat Oct 17 04:52:44 PM EDT 2026
 	ged2map read a geocoder result the way the pre-0.05 Map.pm did.  {lat} and
 	{lon} decided whether a lookup had succeeded, so an OpenAddresses or Local
 	result - which has no {lon} - was treated as a miss, and {geocoder} picked

@@ -22,7 +22,7 @@ HTML::Genealogy::Map - Extract and map genealogical events from a GEDCOM file
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
