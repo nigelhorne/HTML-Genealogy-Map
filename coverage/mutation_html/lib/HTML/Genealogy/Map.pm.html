@@ -1,0 +1,1149 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>File: lib/HTML/Genealogy/Map.pm</title>
+<style>
+
+/* --------------------------------------------------
+   CSS Variables (Light Mode Default)
+-------------------------------------------------- */
+
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --table-header: #333;
+    --table-header-text: #ffffff;
+
+    --survived-1: #f8d7da;
+    --survived-2: #f5b7b1;
+    --survived-3: #ec7063;
+
+    --killed: #d4edda;
+    --border: #cccccc;
+}
+
+/* --------------------------------------------------
+   Dark Mode Overrides
+-------------------------------------------------- */
+
+html[data-theme='dark'] {
+    --bg: #1e1e1e;
+    --text: #dddddd;
+    --table-header: #222;
+    --table-header-text: #ffffff;
+
+    --survived-1: #5c2b2e;
+    --survived-2: #7b2c2f;
+    --survived-3: #a93226;
+
+    --killed: #1e4620;
+    --border: #555;
+}
+
+/* --------------------------------------------------
+   Global Styles
+-------------------------------------------------- */
+
+body {
+	font-family: sans-serif;
+	background: var(--bg);
+	color: var(--text);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background: var(--table-header);
+    color: var(--table-header-text);
+}
+
+.survived-1 { background-color: var(--survived-1); }
+.survived-2 { background-color: var(--survived-2); }
+.survived-3 { background-color: var(--survived-3); }
+
+.killed { background-color: var(--killed); }
+
+.legend {
+    border: 1px solid #ccc;
+    background: #fafafa;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 0.9em;
+}
+
+.legend pre {
+    background: #f4f4f4;
+    padding: 5px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 6px 0 20px;
+    vertical-align: middle;
+    border: 1px solid var(--border);
+}
+
+/* White box for non-mutated lines */
+.legend-box.none {
+	background-color: var(--bg);
+}
+
+/* --------------------------------------------------
+   Suggested Test Box Styling
+   Theme-aware and readable in light & dark modes
+-------------------------------------------------- */
+
+.suggested-test {
+    margin-top: 6px;
+    margin-bottom: 12px;
+
+    /* Use theme variables instead of hardcoded colors */
+    background: var(--bg);
+    color: var(--text);
+
+    padding: 8px;
+    border-radius: 4px;
+
+    /* Subtle border for visual separation */
+    border: 1px solid var(--border);
+}
+
+/* Label styling */
+.suggest-label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+/* Ensure the test code block inherits readable colors */
+.suggested-test pre {
+    background: transparent;   /* Prevent nested dark blocks */
+    color: inherit;            /* Match theme text color */
+    margin: 0;
+    font-family: monospace;
+}
+
+pre { line-height: 1.4; }
+
+pre > details {
+    margin: 0.2em 0;
+}
+
+pre > details:first-child {
+    margin-top: 0;
+}
+
+pre > details:last-child {
+    margin-bottom: 0;
+}
+
+pre details,
+pre summary,
+pre ul,
+pre li {
+    white-space: normal;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.nav { margin-bottom: 1em; }
+
+.toggle {
+    float: right;
+    cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+/* Tooltip container */
+.tooltip {
+	position: relative;
+	cursor: help;
+}
+
+/* Tooltip bubble */
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: var(--table-header);
+    color: var(--table-header-text);
+    padding: 6px 10px;
+    white-space: normal;
+    max-width: 300px;
+    min-width: 30ch;
+    font-size: 12px;
+    border-radius: 6px;
+    z-index: 1000;
+    margin-left: 10ch;   /* move tooltip ~10 characters to the right */
+}
+
+.mutant-details {
+	margin-left: 2em;
+	font-size: 0.9em;
+}
+
+/* Indent the list of mutations that displays when expanding by 8 characters */
+pre details.mutant-details ul {
+	padding-left: 8ch;
+	margin: 0.2em 0;
+}
+
+.mutant-details summary {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.lcsaj-dot {
+    color: #5555ff;
+    font-size: 10px;
+    margin-right: 3px;
+}
+
+.lcsaj-dot-uncovered {
+    color: #cc4444;
+    font-size: 10px;
+    margin-right: 3px;
+}
+
+.lcsaj-tip {
+	position: relative;
+	display: inline-block;
+}
+
+.lcsaj-tip .lcsaj-tip-text {
+	visibility: hidden;
+	background-color: #333;
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	white-space: nowrap;
+	position: fixed;
+	z-index: 9999;
+	pointer-events: none;
+}
+
+.lcsaj-tip:hover .lcsaj-tip-text {
+	visibility: visible;
+}
+
+.cpd-dot {
+    color: #cc8800;
+    font-size: 10px;
+    margin-right: 3px;
+    cursor: help;
+    text-decoration: none;
+}
+a.cpd-dot { cursor: pointer; }
+a.cpd-dot:hover { color: #ff8800; }
+
+.cpd-tip {
+    position: relative;
+    display: inline-block;
+}
+
+.cpd-tip .cpd-tip-text {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.cpd-tip:hover .cpd-tip-text {
+    visibility: visible;
+}
+
+/* CPD drill-down page styles */
+.dup-line { background-color: #fff3cd; display: block; }
+.dup-line:hover { background-color: #ffe082; }
+.intra-dot { color: #9944cc; margin-right: 4px; cursor: help; text-decoration: none; }
+a.intra-dot { cursor: pointer; }
+a.intra-dot:hover { color: #7700bb; }
+.cpd-legend {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 6px 10px;
+    margin-bottom: 1em;
+    font-size: 0.9em;
+}
+
+</style>
+</head>
+<body>
+<button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+<h1>lib/HTML/Genealogy/Map.pm</h1>
+<div class="nav"><a href="../../../../index.html">Index</a>
+</div><div class='summary'>
+<strong>Structural Coverage (Approximate)</strong><p>
+TER1 (Statement): 90.61%<br>
+TER2 (Branch): 73.75%<br>
+TER3 (LCSAJ): 93.3% (14/15)<br>
+Approximate LCSAJ segments: 81<br>
+</div>
+
+    <div class="legend">
+        <h3>LCSAJ Legend</h3>
+
+        <p>
+        <span class="lcsaj-dot">●</span>
+        <b>Covered</b> — this LCSAJ path was executed during testing.
+        </p>
+
+        <p>
+        <span class="lcsaj-dot-uncovered">●</span>
+        <b>Not covered</b> — this LCSAJ path was never executed. These are the paths to focus on.
+        </p>
+
+        <p>
+        Multiple dots on a line indicate that multiple control-flow paths begin at that line.
+        Hovering over any dot shows:
+        </p>
+
+        <pre>
+        start → end → jump
+        </pre>
+
+        <ul>
+        <li><b>start</b> – first line of the linear sequence</li>
+        <li><b>end</b> – last line before control flow changes</li>
+        <li><b>jump</b> – line execution jumps to next</li>
+        </ul>
+
+        <p>
+        Uncovered paths show <b>[NOT COVERED]</b> in the tooltip.
+	</p>
+    </div>
+
+		<div class="legend">
+			<h3>Mutant Testing Legend</h3>
+			<span class="legend-box survived-1"></span> Survived (tests missed this)
+			<span class="legend-box killed"></span> Killed (tests detected this)
+			<span class="legend-box none"></span> No mutation
+		</div>
+	<pre>
+<span class="">    1: package HTML::Genealogy::Map;
+</span><span class="">    2: 
+</span><span class="">    3: use strict;
+</span><span class="">    4: use warnings;
+</span><span class="">    5: 
+</span><span class="">    6: use utf8;
+</span><span class="">    7: 
+</span><span class="">    8: use open qw(:std :encoding(UTF-8));
+</span><span class="">    9: 
+</span><span class="">   10: use autodie;
+</span><span class="">   11: use Date::Cmp;
+</span><span class="">   12: use HTML::GoogleMaps::V3;
+</span><span class="">   13: use HTML::OSM;
+</span><span class="">   14: use Object::Configure 0.15;
+</span><span class="">   15: use Params::Get 0.13;
+</span><span class="">   16: use Params::Validate::Strict 0.16;
+</span><span class="">   17: use Scalar::Util qw(blessed);
+</span><span class="">   18: 
+</span><span class="">   19: =head1 NAME
+</span><span class="">   20: 
+</span><span class="">   21: HTML::Genealogy::Map - Extract and map genealogical events from a GEDCOM file
+</span><span class="">   22: 
+</span><span class="">   23: =head1 VERSION
+</span><span class="">   24: 
+</span><span class="">   25: Version 0.06
+</span><span class="">   26: 
+</span><span class="">   27: =cut
+</span><span class="">   28: 
+</span><span class="">   29: our $VERSION = &#39;0.06&#39;;
+</span><span class="">   30: 
+</span><span class="">   31: # The backends of Geo::Coder::Free that answer from a local database, named as
+</span><span class="">   32: # they put themselves in a result&#39;s &#39;database&#39; key.
+</span><span class="">   33: my %LOCAL_DATABASES = map { $_ =&gt; 1 } qw(OpenAddresses MaxMind Local Geo::Coder::Free::Local);
+</span><span class="">   34: 
+</span><span class="">   35: =head1 DESCRIPTION
+</span><span class="">   36: 
+</span><span class="">   37: This module parses GEDCOM genealogy files and creates an interactive map showing
+</span><span class="">   38: the locations of births, marriages, and deaths. Events at the same location are
+</span><span class="">   39: grouped together in a single marker with a scrollable popup.
+</span><span class="">   40: 
+</span><span class="">   41: =head1 SUBROUTINES/METHODS
+</span><span class="">   42: 
+</span><span class="">   43: =head2 onload_render
+</span><span class="">   44: 
+</span><span class="">   45: Render the map.
+</span><span class="">   46: It takes two mandatory and one optional parameter.
+</span><span class="">   47: It returns an array of two elements, the items for the C&lt;head&gt; and C&lt;body&gt;.
+</span><span class="">   48: 
+</span><span class="">   49: =over 4
+</span><span class="">   50: 
+</span><span class="">   51: =item B&lt;gedcom&gt;
+</span><span class="">   52: 
+</span><span class="">   53: L&lt;GEDCOM&gt; object to process.
+</span><span class="">   54: 
+</span><span class="">   55: =item B&lt;geocoder&gt;
+</span><span class="">   56: 
+</span><span class="">   57: Geocoder to use.
+</span><span class="">   58: Its results are read through the coordinates in C&lt;lat&gt; and C&lt;long&gt;/C&lt;lng&gt; -
+</span><span class="">   59: through C&lt;latitude()&gt;/C&lt;longitude()&gt; when the geocoder returns an object -
+</span><span class="">   60: so L&lt;Geo::Location::Point&gt; and anything else L&lt;HTML::OSM&gt; accepts will do.
+</span><span class="">   61: A result&#39;s C&lt;database&gt; says which local dataset answered, and an
+</span><span class="">   62: L&lt;Geo::Coder::Free&gt; result therefore does not attract the courtesy delay that
+</span><span class="">   63: a remote service gets.
+</span><span class="">   64: 
+</span><span class="">   65: =item B&lt;google_key&gt;
+</span><span class="">   66: 
+</span><span class="">   67: Key to Google&#39;s map API.
+</span><span class="">   68: 
+</span><span class="">   69: =item B&lt;debug&gt;
+</span><span class="">   70: 
+</span><span class="">   71: Enable print statements of what&#39;s going on
+</span><span class="">   72: 
+</span><span class="">   73: =back
+</span><span class="">   74: 
+</span><span class="">   75: =head1 FEATURES
+</span><span class="">   76: 
+</span><span class="">   77: =over 4
+</span><span class="">   78: 
+</span><span class="">   79: =item * Extracts births, marriages, and deaths with location data
+</span><span class="">   80: 
+</span><span class="">   81: =item * Geocodes locations using multiple fallback providers
+</span><span class="">   82: 
+</span><span class="">   83: =item * Groups events at the same location (within ~0.1m precision)
+</span><span class="">   84: 
+</span><span class="">   85: =item * Color-coded event indicators (green=birth, blue=marriage, red=death)
+</span><span class="">   86: 
+</span><span class="">   87: =item * Sorts events chronologically within each category
+</span><span class="">   88: 
+</span><span class="">   89: =item * Scrollable popups for locations with more than 5 events
+</span><span class="">   90: 
+</span><span class="">   91: =item * Persistent caching of geocoding results
+</span><span class="">   92: 
+</span><span class="">   93: =item * For OpenStreetMap: centers on location with most events
+</span><span class="">   94: 
+</span><span class="">   95: =back
+</span><span class="">   96: 
+</span><span class="">   97: =head3	API SPECIFICATION
+</span><span class="">   98: 
+</span><span class="">   99: =head4	INPUT
+</span><span class="">  100: 
+</span><span class="">  101:   {
+</span><span class="">  102:     &#39;gedcom&#39; =&gt; { &#39;type&#39; =&gt; &#39;object&#39;, &#39;can&#39; =&gt; &#39;individuals&#39; },
+</span><span class="">  103:     &#39;geocoder&#39; =&gt; { &#39;type&#39; =&gt; &#39;object&#39;, &#39;can&#39; =&gt; &#39;geocode&#39; },
+</span><span class="">  104:     &#39;debug&#39; =&gt; { &#39;type&#39; =&gt; &#39;boolean&#39;, optional =&gt; 1 },
+</span><span class="">  105:     &#39;google_key&#39; =&gt; { &#39;type&#39; =&gt; &#39;string&#39;, optional =&gt; 1, min =&gt; 39, max =&gt; 39, matches =&gt; qr/^AIza[0-9A-Za-z_-]{35}$/ },
+</span><span class="">  106:     &#39;height&#39; =&gt; { optional =&gt; 1 },
+</span><span class="">  107:     &#39;width&#39; =&gt; { optional =&gt; 1 }
+</span><span class="">  108:   }
+</span><span class="">  109: 
+</span><span class="">  110: =head4	OUTPUT
+</span><span class="">  111: 
+</span><span class="">  112: Argument error: croak
+</span><span class="">  113: No matches found: undef
+</span><span class="">  114: 
+</span><span class="">  115: Returns an array of two strings:
+</span><span class="">  116: 
+</span><span class="">  117:   {
+</span><span class="">  118:     &#39;type&#39; =&gt; &#39;array&#39;,
+</span><span class="">  119:     &#39;min&#39; =&gt; 2,
+</span><span class="">  120:     &#39;max&#39; =&gt; 2,
+</span><span class="">  121:     &#39;schema&#39; =&gt; { &#39;type&#39; =&gt; &#39;string&#39;, min =&gt; 10 },
+</span><span class="">  122:   }
+</span><span class="">  123: 
+</span><span class="">  124: =cut
+</span><span class="">  125: 
+</span><span class="">  126: sub onload_render
+</span><span class="">  127: {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">128 → 158 → 190</span></span>  128: 	my $class = ref($_[0]) ? __PACKAGE__ : shift;
+</span><span class="">  129: 
+</span><span class="">  130: 	# Configuration
+</span><span class="">  131: 	my $params = Params::Validate::Strict::validate_strict({
+</span><span class="">  132: 		args =&gt; Params::Get::get_params(&#39;gedcom&#39;, @_),
+</span><span class="">  133: 		schema =&gt; {
+</span><span class="">  134: 			&#39;gedcom&#39; =&gt; { &#39;type&#39; =&gt; &#39;object&#39;, &#39;can&#39; =&gt; &#39;individuals&#39; },
+</span><span class="">  135: 			&#39;geocoder&#39; =&gt; { &#39;type&#39; =&gt; &#39;object&#39;, &#39;can&#39; =&gt; &#39;geocode&#39; },
+</span><span class="">  136: 			&#39;debug&#39; =&gt; { &#39;type&#39; =&gt; &#39;boolean&#39;, optional =&gt; 1 },
+</span><span class="">  137: 			&#39;google_key&#39; =&gt; { &#39;type&#39; =&gt; &#39;string&#39;, optional =&gt; 1, min =&gt; 39, max =&gt; 39, matches =&gt; qr/^AIza[0-9A-Za-z_-]{35}$/ },
+</span><span class="">  138: 			&#39;height&#39; =&gt; { optional =&gt; 1, type =&gt; &#39;string&#39; },
+</span><span class="">  139: 			&#39;width&#39; =&gt; { optional =&gt; 1, type =&gt; &#39;string&#39; },
+</span><span class="">  140: 		}
+</span><span class="">  141: 	});
+</span><span class="">  142: 
+</span><span class="">  143: 	$params = Object::Configure::configure($class, $params);
+</span><span class="">  144: 
+</span><span class="">  145: 	my $ged = $params-&gt;{&#39;gedcom&#39;};
+</span><span class="">  146: 	my $debug = $params-&gt;{&#39;debug&#39;};
+</span><span class="">  147: 	my $google_key = $params-&gt;{&#39;google_key&#39;};
+</span><span class="">  148: 	my $geocoder = $params-&gt;{&#39;geocoder&#39;};
+</span><span class="">  149: 	my $height = $params-&gt;{&#39;height&#39;} || &#39;400px&#39;;
+</span><span class="">  150: 	my $width = $params-&gt;{&#39;width&#39;} || &#39;600px&#39;;
+</span><span class="">  151: 
+</span><span class="">  152: 	# Storage for events
+</span><span class="">  153: 	my @events;
+</span><span class="">  154: 
+</span><span class="">  155: 	print &quot;Parsing GEDCOM file...\n&quot; if($debug);
+</span><span class="">  156: 
+</span><span class="">  157: 	# Process all individuals
+</span><span class="">  158: 	foreach my $indi ($ged-&gt;individuals) {
+</span><span class="">  159: 		next unless(ref($indi));
+</span><span class="">  160: 		my $name = $indi-&gt;name || &#39;Unknown&#39;;
+</span><span class="">  161: 		$name =~ s/\///g;	# Remove GEDCOM name delimiters
+</span><span class="">  162: 		$name =~ s/&#39;/&amp;apos;/g;	# Probably this is enough HTML::Entities
+</span><span class="">  163: 
+</span><span class="">  164: 		# Birth events
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  165: 		if (my $birth = $indi-&gt;birth) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  166: 			if (ref($birth) &amp;&amp; (my $place = $birth-&gt;place)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  167: 				push @events, {
+</span><span class="">  168: 					type =&gt; &#39;birth&#39;,
+</span><span class="">  169: 					name =&gt; $name,
+</span><span class="">  170: 					place =&gt; $place,
+</span><span class="">  171: 					date =&gt; $birth-&gt;date || &#39;Unknown date&#39;,
+</span><span class="">  172: 				};
+</span><span class="">  173: 			}
+</span><span class="">  174: 		}
+</span><span class="">  175: 
+</span><span class="">  176: 		# Death events
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  177: 		if (my $death = $indi-&gt;death) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  178: 			if (ref($death) &amp;&amp; (my $place = $death-&gt;place)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  179: 				push @events, {
+</span><span class="">  180: 					type =&gt; &#39;death&#39;,
+</span><span class="">  181: 					name =&gt; $name,
+</span><span class="">  182: 					place =&gt; $place,
+</span><span class="">  183: 					date =&gt; $death-&gt;date || &#39;Unknown date&#39;,
+</span><span class="">  184: 				};
+</span><span class="">  185: 			}
+</span><span class="">  186: 		}
+</span><span class="">  187: 	}
+</span><span class="">  188: 
+</span><span class="">  189: 	# Process all families (marriages)
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">190 → 190 → 213</span></span>  190: 	foreach my $fam ($ged-&gt;families) {
+</span><span class="">  191: 		next unless defined($fam) &amp;&amp; ref($fam);	# Yes, really
+</span><span class="">  192: 
+</span><span class="">  193: 		my $husband = (ref($fam-&gt;husband) &amp;&amp; $fam-&gt;husband-&gt;name) ? $fam-&gt;husband-&gt;name : &#39;Unknown&#39;;
+</span><span class="">  194: 		my $wife = (ref($fam-&gt;wife) &amp;&amp; $fam-&gt;wife-&gt;name) ? $fam-&gt;wife-&gt;name : &#39;Unknown&#39;;
+</span><span class="">  195: 
+</span><span class="">  196: 		$husband =~ s/\///g;
+</span><span class="">  197: 		$wife =~ s/\///g;
+</span><span class="">  198: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  199: 		if (my $marriage = $fam-&gt;marriage) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  200: 			if (ref($marriage) &amp;&amp; (my $place = $marriage-&gt;place)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  201: 				$husband =~ s/&#39;/&amp;apos;/;
+</span><span class="">  202: 				$wife =~ s/&#39;/&amp;apos;/;
+</span><span class="">  203: 				push @events, {
+</span><span class="">  204: 					type =&gt; &#39;marriage&#39;,
+</span><span class="">  205: 					name =&gt; &quot;$husband &amp;amp; $wife&quot;,
+</span><span class="">  206: 					place =&gt; $place,
+</span><span class="">  207: 					date =&gt; $marriage-&gt;date || &#39;Unknown date&#39;,
+</span><span class="">  208: 				};
+</span><span class="">  209: 			}
+</span><span class="">  210: 		}
+</span><span class="">  211: 	}
+</span><span class="">  212: 
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">213 → 220 → 252</span></span>  213: 	print &#39;Found &#39;, scalar(@events), &quot; events with location data.\n&quot; if($debug);
+</span><span class="">  214: 	print &quot;Geocoding locations...\n&quot; if($debug);
+</span><span class="">  215: 
+</span><span class="">  216: 	# Geocode all events
+</span><span class="">  217: 	my @geocoded_events;
+</span><span class="">  218: 	my %cache;	# TODO allow use of params-&gt;{cache} if given
+</span><span class="">  219: 
+</span><span class="">  220: 	foreach my $event (@events) {
+</span><span class="">  221: 		my $place = $event-&gt;{place};
+</span><span class="">  222: 
+</span><span class="">  223: 		# Check cache
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  224: 		unless (exists $cache{$place}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  225: 			my $location = $geocoder-&gt;geocode(location =&gt; $place);
+</span><span class="">  226: 			my ($lat, $long) = _coordinates($location);
+</span><span class="">  227: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  228: 			if (defined($lat) &amp;&amp; defined($long)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  229: 				$cache{$place} = {
+</span><span class="">  230: 					lat =&gt; $lat,
+</span><span class="">  231: 					lon =&gt; $long,	# The cache&#39;s own key, not a key of the result
+</span><span class="">  232: 				};
+</span><span class="">  233: 				print &quot;\tGeocoded: $place\n&quot; if($debug);
+</span><span class="">  234: 				sleep 1 unless _is_local($location);	# Be nice to geocoding service
+</span><span class="">  235: 
+</span><span class="">  236: 			} else {
+</span><span class="">  237: 				print &quot;\tFailed to geocode: $place\n&quot; if($debug);
+</span><span class="">  238: 				$cache{$place} = undef;
+</span><span class="">  239: 				sleep 1;	# Be nice to geocoding service
+</span><span class="">  240: 			}
+</span><span class="">  241: 		}
+</span><span class="">  242: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  243: 		if ($cache{$place}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  244: 			push @geocoded_events, {
+</span><span class="">  245: 				%$event,
+</span><span class="">  246: 				lat =&gt; $cache{$place}{lat},
+</span><span class="">  247: 				lon =&gt; $cache{$place}{lon},
+</span><span class="">  248: 			};
+</span><span class="">  249: 		}
+</span><span class="">  250: 	}
+</span><span class="">  251: 
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">252 → 260 → 266</span></span>  252: 	print &#39;Successfully geocoded &#39;, scalar(@geocoded_events), &quot; events.\n&quot; if($debug);
+</span><span class="">  253: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  254: 	return(&#39;&#39;, &#39;&#39;) if(scalar(@geocoded_events) == 0);	# Empty
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  255: 
+</span><span class="">  256: 	print &quot;Generating map...\n&quot; if($debug);
+</span><span class="">  257: 
+</span><span class="">  258: 	# Group events by location
+</span><span class="">  259: 	my %location_groups;
+</span><span class="">  260: 	foreach my $event (@geocoded_events) {
+</span><span class="">  261: 		my $key = sprintf(&#39;%.6f,%.6f&#39;, $event-&gt;{lat}, $event-&gt;{lon});
+</span><span class="">  262: 		push @{$location_groups{$key}}, $event;
+</span><span class="">  263: 	}
+</span><span class="">  264: 
+</span><span class="">  265: 	# Generate map based on available API key
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">266 → 267 → 273</span></span>  266: 	my $map;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  267: 	if ($google_key) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  268: 		$map = _generate_google_map(\%location_groups, $height, $width, $google_key);
+</span><span class="">  269: 	} else {
+</span><span class="">  270: 		$map = _generate_osm_map(\%location_groups, $height, $width);
+</span><span class="">  271: 	}
+</span><span class="">  272: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  273: 	return $map-&gt;onload_render();
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  274: }
+</span><span class="">  275: 
+</span><span class="">  276: # Purpose:  Read the position out of a geocoder result.
+</span><span class="">  277: # Entry:    $location &acirc;&#128;&#148; a Geo::Location::Point (or anything else with
+</span><span class="">  278: #           latitude()/longitude(), which is what HTML::OSM accepts), or a
+</span><span class="">  279: #           plain hashref from another geocoder, or undef.
+</span><span class="">  280: # Exit:     ($lat, $lon) with either possibly undef; an empty list for a result
+</span><span class="">  281: #           that carries no position.
+</span><span class="">  282: sub _coordinates {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">283 → 287 → 291</span></span>  283: 	my $location = shift;
+</span><span class="">  284: 
+</span><span class="">  285: 	return unless defined($location);
+</span><span class="">  286: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  287: 	if(blessed($location) &amp;&amp; $location-&gt;can(&#39;latitude&#39;) &amp;&amp; $location-&gt;can(&#39;longitude&#39;)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  288: 		return ($location-&gt;latitude(), $location-&gt;longitude());
+</span><span class="">  289: 	}
+</span><span class="">  290: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">291 → 291 → 300</span></span>  291: 	if(ref($location) eq &#39;HASH&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  292: 		# lat/long/lng are the keys Geo::Location::Point itself builds; &#39;lon&#39; is
+</span><span class="">  293: 		# only a third fallback, for geocoders that spell longitude that way. It
+</span><span class="">  294: 		# is not part of the point interface: only one of Geo::Coder::Free&#39;s
+</span><span class="">  295: 		# MaxMind shortcuts ever sets it.
+</span><span class="">  296: 		return ($location-&gt;{&#39;lat&#39;},
+</span><span class="">  297: 			$location-&gt;{&#39;long&#39;} // $location-&gt;{&#39;lng&#39;} // $location-&gt;{&#39;lon&#39;});
+</span><span class="">  298: 	}
+</span><span class="">  299: 
+</span><span class="">  300: 	return;
+</span><span class="">  301: }
+</span><span class="">  302: 
+</span><span class="">  303: # Purpose:  Is this result from a local dataset, so that it needs no courtesy
+</span><span class="">  304: #           delay before the next lookup?
+</span><span class="">  305: # Entry:    $location &acirc;&#128;&#148; a geocoder result.
+</span><span class="">  306: # Exit:     1 if it came from an offline database, 0 otherwise.
+</span><span class="">  307: sub _is_local {
+</span><span class="">  308: 	my $location = shift;
+</span><span class="">  309: 
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  310: 	return 0 unless ref($location);
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_310_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_310_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  311: 	return 0 if(ref($location) eq &#39;ARRAY&#39;);	# A flat [lat, lon] says nothing about provenance
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_311_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_311_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  312: 
+</span><span class="">  313: 	# &#39;database&#39; is set by every Geo::Coder::Free backend and names the one that
+</span><span class="">  314: 	# answered, in one of two vocabularies (%LOCAL_DATABASES holds both).
+</span><span class="">  315: 	# &#39;geocoder&#39; names the distribution instead: Geo::Coder::Free has set it since
+</span><span class="">  316: 	# 0.45, and a wrapper such as Geo::Coder::List stamps it on its own results,
+</span><span class="">  317: 	# so it is tested second - a result carrying neither key is not guessed to be
+</span><span class="">  318: 	# local.
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  319: 	return 1 if(defined($location-&gt;{&#39;database&#39;}) &amp;&amp; $LOCAL_DATABASES{$location-&gt;{&#39;database&#39;}});
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  320: 	return 1 if(defined($location-&gt;{&#39;geocoder&#39;}) &amp;&amp; $location-&gt;{&#39;geocoder&#39;} =~ /^Geo::Coder::Free/);
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  321: 
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  322: 	return 0;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_322_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_322_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  323: }
+</span><span class="">  324: 
+</span><span class="">  325: # Generate HTML for grouped events
+</span><span class="">  326: sub _generate_popup_html {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">327 → 335 → 340</span></span>  327: 	my ($events) = @_;
+</span><span class="">  328: 
+</span><span class="">  329: 	my $place = $events-&gt;[0]{place};
+</span><span class="">  330: 	my $event_count = scalar(@$events);
+</span><span class="">  331: 
+</span><span class="">  332: 	# Add scrollable container if more than 5 events
+</span><span class="">  333: 	my $container_start = &#39;&#39;;
+</span><span class="">  334: 	my $container_end = &#39;&#39;;
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  335: 	if ($event_count &gt; 5) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_335_19_&lt;: Numeric boundary flip &gt; to &lt;</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_335_19_&gt;=: Numeric boundary flip &gt; to &gt;=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_335_19_&lt;=: Numeric boundary flip &gt; to &lt;=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_335_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  336: 		$container_start = &#39;&lt;div style=&quot;max-height: 300px; overflow-y: auto;&quot;&gt;&#39;;
+</span><span class="">  337: 		$container_end = &#39;&lt;/div&gt;&#39;;
+</span><span class="">  338: 	}
+</span><span class="">  339: 
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">340 → 344 → 349</span></span>  340: 	my $html = &quot;&lt;b&gt;$place&lt;/b&gt;&lt;br&gt;&lt;br&gt;$container_start&quot;;
+</span><span class="">  341: 
+</span><span class="">  342: 	# Group by type
+</span><span class="">  343: 	my %by_type;
+</span><span class="">  344: 	foreach my $event (@$events) {
+</span><span class="">  345: 		push @{$by_type{$event-&gt;{type}}}, $event;
+</span><span class="">  346: 	}
+</span><span class="">  347: 
+</span><span class="">  348: 	# Sort function for dates
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">349 → 362 → 375</span></span>  349: 	my $sort_by_date = sub {
+</span><span class="">  350: 		my $date_a = $a-&gt;{&#39;date&#39;};
+</span><span class="">  351: 		my $date_b = $b-&gt;{&#39;date&#39;};
+</span><span class="">  352: 
+</span><span class="">  353: 		# Put unknown dates at the end
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  354: 		return 1 if $date_a =~ /^Unknown/i &amp;&amp; $date_b !~ /^Unknown/i;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_354_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_354_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  355: 		return -1 if $date_b =~ /^Unknown/i &amp;&amp; $date_a !~ /^Unknown/i;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_355_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_355_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  356: 		return 0 if $date_a =~ /^Unknown/i &amp;&amp; $date_b =~ /^Unknown/i;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_356_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_356_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  357: 
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  358: 		return Date::Cmp::datecmp($date_a, $date_b);
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_358_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_358_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  359: 	};
+</span><span class="">  360: 
+</span><span class="">  361: 	# Add births
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  362: 	if ($by_type{birth}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  363: 		$html .= &#39;&lt;b&gt;Births:&lt;/b&gt;&lt;br&gt;&#39;;
+</span><span class="">  364: 		foreach my $event (sort $sort_by_date @{$by_type{birth}}) {
+</span><span class="">  365: 			$html .= sprintf(
+</span><span class="">  366: 				&#39;&lt;span style=&quot;color: green; font-size: 20px;&quot;&gt;&amp;#x25CF;&lt;/span&gt; %s (%s)&lt;br&gt;&#39;,
+</span><span class="">  367: 				$event-&gt;{name},
+</span><span class="">  368: 				$event-&gt;{date}
+</span><span class="">  369: 			);
+</span><span class="">  370: 		}
+</span><span class="">  371: 		$html .= &#39;&lt;br&gt;&#39;;
+</span><span class="">  372: 	}
+</span><span class="">  373: 
+</span><span class="">  374: 	# Add marriages
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">375 → 375 → 388</span></span>  375: 	if ($by_type{marriage}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_375_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  376: 		$html .= &#39;&lt;b&gt;Marriages:&lt;/b&gt;&lt;br&gt;&#39;;
+</span><span class="">  377: 		foreach my $event (sort $sort_by_date @{$by_type{marriage}}) {
+</span><span class="">  378: 			$html .= sprintf(
+</span><span class="">  379: 				&#39;&lt;span style=&quot;color: blue; font-size: 20px;&quot;&gt;&amp;#x25CF;&lt;/span&gt; %s (%s)&lt;br&gt;&#39;,
+</span><span class="">  380: 				$event-&gt;{name},
+</span><span class="">  381: 				$event-&gt;{date}
+</span><span class="">  382: 			);
+</span><span class="">  383: 		}
+</span><span class="">  384: 		$html .= &#39;&lt;br&gt;&#39;;
+</span><span class="">  385: 	}
+</span><span class="">  386: 
+</span><span class="">  387: 	# Add deaths
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">388 → 388 → 399</span></span>  388: 	if ($by_type{death}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  389: 		$html .= &#39;&lt;b&gt;Deaths:&lt;/b&gt;&lt;br&gt;&#39;;
+</span><span class="">  390: 		foreach my $event (sort $sort_by_date @{$by_type{death}}) {
+</span><span class="">  391: 			$html .= sprintf(
+</span><span class="">  392: 				&#39;&lt;span style=&quot;color: red; font-size: 20px;&quot;&gt;&amp;#x25CF;&lt;/span&gt; %s (%s)&lt;br&gt;&#39;,
+</span><span class="">  393: 				$event-&gt;{name},
+</span><span class="">  394: 				$event-&gt;{date}
+</span><span class="">  395: 			);
+</span><span class="">  396: 		}
+</span><span class="">  397: 	}
+</span><span class="">  398: 
+</span><span class="">  399: 	$html .= $container_end;
+</span><span class="">  400: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  401: 	return $html;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  402: }
+</span><span class="">  403: 
+</span><span class="">  404: # Generate Google Maps
+</span><span class="">  405: sub _generate_google_map {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 406 → 416 → 435</span></span>  406: 	my ($location_groups, $height, $width, $key) = @_;
+</span><span class="">  407: 
+</span><span class="">  408: 	my $map = HTML::GoogleMaps::V3-&gt;new(
+</span><span class="">  409: 		key =&gt; $key,
+</span><span class="">  410: 		height =&gt; $height,
+</span><span class="">  411: 		width =&gt; $width
+</span><span class="">  412: 	);
+</span><span class="">  413: 
+</span><span class="">  414: 	# Add markers for each location
+</span><span class="">  415: 	my $first = 1;
+</span><span class="">  416: 	foreach my $loc_key (keys %$location_groups) {
+</span><span class="">  417: 		my $events = $location_groups-&gt;{$loc_key};
+</span><span class="">  418: 		my ($lat, $lon) = split /,/, $loc_key;
+</span><span class="">  419: 
+</span><span class="">  420: 		my $html = _generate_popup_html($events);
+</span><span class="">  421: 
+</span><span class="">  422: 		$map-&gt;add_marker(
+</span><span class="">  423: 			point =&gt; [$lat, $lon],
+</span><span class="">  424: 			html =&gt; $html,
+</span><span class="">  425: 		);
+</span><span class="">  426: 
+</span><span class="">  427: 		# Center on first location
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  428: 		if ($first) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_428_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  429: 			$map-&gt;center([$lat, $lon]);
+</span><span class="">  430: 			$map-&gt;zoom(4);
+</span><span class="">  431: 			$first = 0;
+</span><span class="">  432: 		}
+</span><span class="">  433: 	}
+</span><span class="">  434: 
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  435: 	return $map;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_435_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_435_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  436: }
+</span><span class="">  437: 
+</span><span class="">  438: # Generate OpenStreetMap using HTML::OSM
+</span><span class="">  439: sub _generate_osm_map {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">440 → 446 → 459</span></span>  440: 	my ($location_groups, $height, $width) = @_;
+</span><span class="">  441: 
+</span><span class="">  442: 	# Create HTML::OSM object
+</span><span class="">  443: 	my $osm = HTML::OSM-&gt;new(zoom =&gt; 12, height =&gt; $height, width =&gt; $width);
+</span><span class="">  444: 
+</span><span class="">  445: 	# Add markers for each location
+</span><span class="">  446: 	foreach my $loc_key (keys %$location_groups) {
+</span><span class="">  447: 		my $events = $location_groups-&gt;{$loc_key};
+</span><span class="">  448: 		my ($lat, $lon) = split /,/, $loc_key;
+</span><span class="">  449: 
+</span><span class="">  450: 		my $html = _generate_popup_html($events);
+</span><span class="">  451: 
+</span><span class="">  452: 		$osm-&gt;add_marker(
+</span><span class="">  453: 			point =&gt; [$lat, $lon],
+</span><span class="">  454: 			html =&gt; $html,
+</span><span class="">  455: 		);
+</span><span class="">  456: 	}
+</span><span class="">  457: 
+</span><span class="">  458: 	# Find location with most events
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">459 → 461 → 469</span></span>  459: 	my ($center_lat, $center_lon) = (0, 0);
+</span><span class="">  460: 	my $max_events = 0;
+</span><span class="">  461: 	foreach my $loc_key (keys %$location_groups) {
+</span><span class="">  462: 		my $event_count = scalar(@{$location_groups-&gt;{$loc_key}});
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  463: 		if ($event_count &gt; $max_events) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_463_20_&lt;: Numeric boundary flip &gt; to &lt;</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_463_20_&gt;=: Numeric boundary flip &gt; to &gt;=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_463_20_&lt;=: Numeric boundary flip &gt; to &lt;=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_463_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  464: 			$max_events = $event_count;
+</span><span class="">  465: 			($center_lat, $center_lon) = split /,/, $loc_key;
+</span><span class="">  466: 		}
+</span><span class="">  467: 	}
+</span><span class="">  468: 
+</span><span class="">  469: 	$osm-&gt;center([$center_lat, $center_lon]);
+</span><span class="">  470: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  471: 	return $osm;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  472: }
+</span><span class="">  473: 
+</span><span class="">  474: =head1 BUGS
+</span><span class="">  475: 
+</span><span class="">  476: =head1 SEE ALSO
+</span><span class="">  477: 
+</span><span class="">  478: =over 4
+</span><span class="">  479: 
+</span><span class="">  480: =item * L&lt;Test Dashboard|https://nigelhorne.github.io/HTML-Genealogy-Map/coverage/&gt;
+</span><span class="">  481: 
+</span><span class="">  482: =item * L&lt;Configure an Object at Runtime|Object::Configure&gt;
+</span><span class="">  483: 
+</span><span class="">  484: =back
+</span><span class="">  485: 
+</span><span class="">  486: =head1 REPOSITORY
+</span><span class="">  487: 
+</span><span class="">  488: L&lt;https://github.com/nigelhorne/HTML-Genealogy-Map&gt;
+</span><span class="">  489: 
+</span><span class="">  490: =head1 SUPPORT
+</span><span class="">  491: 
+</span><span class="">  492: This module is provided as-is without any warranty.
+</span><span class="">  493: 
+</span><span class="">  494: Please report any bugs or feature requests to C&lt;bug-html-genealogy-map at rt.cpan.org&gt;,
+</span><span class="">  495: or through the web interface at
+</span><span class="">  496: L&lt;http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-Genealogy-Map&gt;.
+</span><span class="">  497: I will be notified, and then you&#39;ll
+</span><span class="">  498: automatically be notified of progress on your bug as I make changes.
+</span><span class="">  499: 
+</span><span class="">  500: You can find documentation for this module with the perldoc command.
+</span><span class="">  501: 
+</span><span class="">  502:     perldoc HTML::Genalogy::Map
+</span><span class="">  503: 
+</span><span class="">  504: You can also look for information at:
+</span><span class="">  505: 
+</span><span class="">  506: =over 4
+</span><span class="">  507: 
+</span><span class="">  508: =item * MetaCPAN
+</span><span class="">  509: 
+</span><span class="">  510: L&lt;https://metacpan.org/dist/HTML-Genealogy-Map&gt;
+</span><span class="">  511: 
+</span><span class="">  512: =item * RT: CPAN&#39;s request tracker
+</span><span class="">  513: 
+</span><span class="">  514: L&lt;https://rt.cpan.org/NoAuth/Bugs.html?Dist=HTML-Genealogy-Map&gt;
+</span><span class="">  515: 
+</span><span class="">  516: =item * CPAN Testers&#39; Matrix
+</span><span class="">  517: 
+</span><span class="">  518: L&lt;http://matrix.cpantesters.org/?dist=HTML-Genealogy-Map&gt;
+</span><span class="">  519: 
+</span><span class="">  520: =item * CPAN Testers Dependencies
+</span><span class="">  521: 
+</span><span class="">  522: L&lt;http://deps.cpantesters.org/?module=HTML::Genalogy::Map&gt;
+</span><span class="">  523: 
+</span><span class="">  524: =back
+</span><span class="">  525: 
+</span><span class="">  526: =head1 AUTHOR
+</span><span class="">  527: 
+</span><span class="">  528: Nigel Horne, C&lt;&lt; &lt;njh at nigelhorne.com&gt; &gt;&gt;
+</span><span class="">  529: 
+</span><span class="">  530: =head1 LICENCE AND COPYRIGHT
+</span><span class="">  531: 
+</span><span class="">  532: Copyright 2025-2026 Nigel Horne.
+</span><span class="">  533: 
+</span><span class="">  534: Usage is subject to the GPL2 licence terms.
+</span><span class="">  535: If you use it,
+</span><span class="">  536: please let me know.
+</span><span class="">  537: 
+</span><span class="">  538: =cut
+</span><span class="">  539: 
+</span><span class="">  540: 1;
+</span></pre>
+
+<script>
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+}
+
+(function() {
+    const saved = localStorage.getItem('theme');
+    if(saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+    }
+})();
+
+document.addEventListener("mousemove", function(e) {
+	document.querySelectorAll(".lcsaj-tip-text, .cpd-tip-text").forEach(function(tip) {
+		tip.style.left = (e.clientX + 12) + "px";
+		tip.style.top  = (e.clientY + 12) + "px";
+	});
+});
+</script>
+</body>
+</html>
+	

@@ -54,17 +54,17 @@ https://pjcj.net
 <tr><td class="h"><a id="L291">291</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $location eq &quot;HASH&quot;)</td></tr>
 <tr><td class="h"><a id="L310">310</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless ref $location</td></tr>
 <tr><td class="h"><a id="L311">311</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ref $location eq &quot;ARRAY&quot;</td></tr>
-<tr><td class="h"><a id="L317">317</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if defined $location-&gt;{&#39;database&#39;} and $LOCAL_DATABASES{$location-&gt;{&#39;database&#39;}}</td></tr>
-<tr><td class="h"><a id="L318">318</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if defined $location-&gt;{&#39;geocoder&#39;} and $location-&gt;{&#39;geocoder&#39;} =~ /^Geo::Coder::Free/</td></tr>
-<tr><td class="h"><a id="L333">333</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($event_count &gt; 5)</td></tr>
-<tr><td class="h"><a id="L352">352</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and not $date_b =~ /^Unknown/i</td></tr>
-<tr><td class="h"><a id="L353">353</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_b =~ /^Unknown/i and not $date_a =~ /^Unknown/i</td></tr>
-<tr><td class="h"><a id="L354">354</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and $date_b =~ /^Unknown/i</td></tr>
-<tr><td class="h"><a id="L360">360</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;birth&#39;})</td></tr>
-<tr><td class="h"><a id="L373">373</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;marriage&#39;})</td></tr>
-<tr><td class="h"><a id="L386">386</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;death&#39;})</td></tr>
-<tr><td class="h"><a id="L426">426</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($first)</td></tr>
-<tr><td class="h"><a id="L461">461</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($event_count &gt; $max_events)</td></tr>
+<tr><td class="h"><a id="L319">319</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if defined $location-&gt;{&#39;database&#39;} and $LOCAL_DATABASES{$location-&gt;{&#39;database&#39;}}</td></tr>
+<tr><td class="h"><a id="L320">320</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if defined $location-&gt;{&#39;geocoder&#39;} and $location-&gt;{&#39;geocoder&#39;} =~ /^Geo::Coder::Free/</td></tr>
+<tr><td class="h"><a id="L335">335</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($event_count &gt; 5)</td></tr>
+<tr><td class="h"><a id="L354">354</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and not $date_b =~ /^Unknown/i</td></tr>
+<tr><td class="h"><a id="L355">355</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_b =~ /^Unknown/i and not $date_a =~ /^Unknown/i</td></tr>
+<tr><td class="h"><a id="L356">356</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $date_a =~ /^Unknown/i and $date_b =~ /^Unknown/i</td></tr>
+<tr><td class="h"><a id="L362">362</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;birth&#39;})</td></tr>
+<tr><td class="h"><a id="L375">375</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;marriage&#39;})</td></tr>
+<tr><td class="h"><a id="L388">388</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($by_type{&#39;death&#39;})</td></tr>
+<tr><td class="h"><a id="L428">428</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($first)</td></tr>
+<tr><td class="h"><a id="L463">463</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($event_count &gt; $max_events)</td></tr>
 </table>
 </body>
 </html>
