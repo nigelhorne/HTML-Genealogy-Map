@@ -311,9 +311,11 @@ sub _is_local {
 	return 0 if(ref($location) eq 'ARRAY');	# A flat [lat, lon] says nothing about provenance
 
 	# 'database' is set by every Geo::Coder::Free backend and names the one that
-	# answered. 'geocoder' is a secondary hint, stamped by wrappers such as
-	# Geo::Coder::List - Geo::Coder::Free itself never sets it, so it is tested
-	# second and is never the only evidence of a local lookup.
+	# answered, in one of two vocabularies (%LOCAL_DATABASES holds both).
+	# 'geocoder' names the distribution instead: Geo::Coder::Free has set it since
+	# 0.45, and a wrapper such as Geo::Coder::List stamps it on its own results,
+	# so it is tested second - a result carrying neither key is not guessed to be
+	# local.
 	return 1 if(defined($location->{'database'}) && $LOCAL_DATABASES{$location->{'database'}});
 	return 1 if(defined($location->{'geocoder'}) && $location->{'geocoder'} =~ /^Geo::Coder::Free/);
 
