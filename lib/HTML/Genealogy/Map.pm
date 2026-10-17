@@ -26,7 +26,7 @@ Version 0.05
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 # The backends of Geo::Coder::Free that answer from a local database, named as
 # they put themselves in a result's 'database' key.
