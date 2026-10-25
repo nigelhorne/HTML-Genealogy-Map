@@ -1,0 +1,51 @@
+---
+# The reader/producer contract: the trigger, and the shared body it runs.
+#
+# The job itself used to be copied into each of the four distributions that run
+# it - Geo-Coder-Free, Database-BI, Geo-Location-Point and this one - and the
+# copies drifted apart: one lost the producer's checkout and stopped at
+# "workspace/Geo-Coder-Free was not checked out" before the contract ran;
+# another pinned the Perl setup to a different commit.  The body is now the one
+# file Geo-Coder-Free/.github/workflows/contract-body.yml and this is only what
+# differs between the four: the schedule, and the name of the distribution to
+# check out at this commit.
+#
+# The body is read from Geo-Coder-Free's master branch, so a change to it takes
+# effect here once it is merged there; Geo-Coder-Free calls the body by local
+# path, so the pull request that changes it is tested against the change.
+# t/contract-workflows.t fails if any of the four goes back to carrying a copy
+# of the body.
+name: Reader/producer contract
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  schedule:
+    # Daily, so a consumer added to a sibling checkout is caught even when
+    # nothing has been pushed to this distribution.
+    - cron: '41 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    uses: nigelhorne/Geo-Coder-Free/.github/workflows/contract-body.yml@master
+    with:
+      distribution: HTML-Genealogy-Map
+      # Passed through so the body checks out this commit rather than the
+      # default branch of whichever repository the called workflow resolves to.
+      repository: ${{ github.repository }}
+      ref: ${{ github.ref }}
+    secrets: inherit
