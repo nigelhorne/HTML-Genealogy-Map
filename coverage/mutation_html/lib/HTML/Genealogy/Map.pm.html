@@ -363,11 +363,11 @@ Approximate LCSAJ segments: 81<br>
 </span><span class="">   22: 
 </span><span class="">   23: =head1 VERSION
 </span><span class="">   24: 
-</span><span class="">   25: Version 0.06
+</span><span class="">   25: Version 0.07
 </span><span class="">   26: 
 </span><span class="">   27: =cut
 </span><span class="">   28: 
-</span><span class="">   29: our $VERSION = &#39;0.06&#39;;
+</span><span class="">   29: our $VERSION = &#39;0.07&#39;;
 </span><span class="">   30: 
 </span><span class="">   31: # The backends of Geo::Coder::Free that answer from a local database, named as
 </span><span class="">   32: # they put themselves in a result&#39;s &#39;database&#39; key.
@@ -648,7 +648,7 @@ Approximate LCSAJ segments: 81<br>
 </span><span class="">  307: sub _is_local {
 </span><span class="">  308: 	my $location = shift;
 </span><span class="">  309: 
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  310: 	return 0 unless ref($location);
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  310: 	return 0 unless ref($location);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -670,7 +670,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  311: 	return 0 if(ref($location) eq &#39;ARRAY&#39;);	# A flat [lat, lon] says nothing about provenance
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  311: 	return 0 if(ref($location) eq &#39;ARRAY&#39;);	# A flat [lat, lon] says nothing about provenance
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -702,7 +702,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  319: 	return 1 if(defined($location-&gt;{&#39;database&#39;}) &amp;&amp; $LOCAL_DATABASES{$location-&gt;{&#39;database&#39;}});
 </span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  320: 	return 1 if(defined($location-&gt;{&#39;geocoder&#39;}) &amp;&amp; $location-&gt;{&#39;geocoder&#39;} =~ /^Geo::Coder::Free/);
 </span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  321: 
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  322: 	return 0;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  322: 	return 0;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -785,7 +785,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  351: 		my $date_b = $b-&gt;{&#39;date&#39;};
 </span><span class="">  352: 
 </span><span class="">  353: 		# Put unknown dates at the end
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  354: 		return 1 if $date_a =~ /^Unknown/i &amp;&amp; $date_b !~ /^Unknown/i;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  354: 		return 1 if $date_a =~ /^Unknown/i &amp;&amp; $date_b !~ /^Unknown/i;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -829,7 +829,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  356: 		return 0 if $date_a =~ /^Unknown/i &amp;&amp; $date_b =~ /^Unknown/i;
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  356: 		return 0 if $date_a =~ /^Unknown/i &amp;&amp; $date_b =~ /^Unknown/i;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
