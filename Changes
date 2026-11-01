@@ -1,5 +1,25 @@
 Revision history for HTML-Genealogy-Map
 
+0.07
+	[ Tests ]
+	- .github/workflows/actionlint.yml lints every workflow on push and pull
+	  request: actionlint checks each expression against the contexts it may be
+	  read in, and shellcheck checks the shell inside every run: block, both
+	  downloaded from a pinned release with a verified checksum rather than
+	  installed from the runner image.  A workflow file is refused by GitHub
+	  whole, before any job runs - "Unrecognized named-value: 'runner'" for
+	  ${{ runner.temp }} in a job-level env, which is how Database-BI's
+	  browser.yml lost all four of its jobs - and nothing in t/ reads .github/,
+	  so the check has to exist before a push.  The findings in these workflows
+	  are fixed rather than silenced: the eval idiom quoted (SC2046), writes to
+	  $GITHUB_ENV and $GITHUB_PATH quoted (SC2086), find | xargs given -print0
+	  and -0 (SC2038), and the while read given IFS= and -r in fuzz.yml
+	  (SC2162), which is what turns a configuration file name with a backslash
+	  into the name it has.  The file is the one the distributions that share
+	  these workflows carry unchanged - the contract job's four callers, the
+	  siblings it checks out and the eight the location-predicate fuzz assembles
+	  - so the copies here are held to the same rules.
+
 0.06	Sat Oct 17 04:52:44 PM EDT 2026
 	ged2map read a geocoder result the way the pre-0.05 Map.pm did.  {lat} and
 	{lon} decided whether a lookup had succeeded, so an OpenAddresses or Local

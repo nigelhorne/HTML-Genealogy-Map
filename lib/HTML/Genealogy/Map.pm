@@ -22,11 +22,11 @@ HTML::Genealogy::Map - Extract and map genealogical events from a GEDCOM file
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # The backends of Geo::Coder::Free that answer from a local database, named as
 # they put themselves in a result's 'database' key.
